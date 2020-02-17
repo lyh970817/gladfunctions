@@ -63,10 +63,7 @@ questionnaire_clean <- function(questionnaire, data_raw, limits) {
   # in "Comments"
   not_derived <- !grepl("[Dd]erived", sheet[["Comments"]])
 
-  # Select only variables that are in the dictionary sheet and are not
-  # derived variabels to extract.  Variables that are only in the data are
-  # mostly not useful, they could be heading variables exported by
-  # Qualtrics.
+  # Select only variables that are in the dataframe.
   vars <- sheet_vars[which(sheet_vars %in% colnames(data_raw) & not_derived)]
 
   data_raw <- data_raw %>%

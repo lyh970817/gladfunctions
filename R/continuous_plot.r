@@ -2,44 +2,19 @@
 # -99 and -88 in subtitles
 
 continuous_point_plot_wo_outliers <- function(data, var, unit, title, googlesheet) {
-  min <- tryCatch(
-    expr = {
-      sheet_extract("min", var, googlesheet)
-    },
+  min <- tryCatch(sheet_extract("min", var, googlesheet),
     error = function(e) {
       min(data[[var]], na.rm = T)
     }
   )
-
-  max <- tryCatch(
-    expr = {
-      sheet_extract("max", var, googlesheet)
-    },
+  max <- tryCatch(sheet_extract("max", var, googlesheet),
     error = function(e) {
       max(data[[var]], na.rm = T)
     }
   )
-
-  if (length(min) > 1) {
-    message(paste("More than one minimum for", var))
-    min <- min[1]
+  if (assert_limits(max, min)) {
+    stop("Invalid limits")
   }
-
-  if (length(max) > 1) {
-    message(paste("More than one maximum for", var))
-    max <- max[1]
-  }
-
-  if (!is.numeric(min)) {
-    message(paste("Minimum for", var, "is not numeric."))
-    min <- min(data[[var]], na.rm = T)
-  }
-
-  if (!is.numeric(max)) {
-    message(paste("Maximum for", var, "is not numeric."))
-    max <- max(data[[var]], na.rm = T)
-  }
-
   length_missing <- sum(data[[var]] > max | data[[var]] < min, na.rm = T)
   data <- data %>% filter((data[[var]] <= max & data[[var]] >= min) | is.na(data[[var]]))
 
@@ -155,22 +130,11 @@ continuous_point_plot_w_outliers <- function(data, var, unit, title) {
 }
 
 continous_point_plot <- function(data, var, googlesheet, include_outlier = TRUE) {
-  if (!is.data.frame(data)) stop("'data' needs to be an object of class 'data.frame'.")
-  if (!is.character(var) & length(var) == 1) stop("'var' needs to be a character vector of length 1")
-
   title <- sheet_extract("title", var, googlesheet)
-
   if (length(title) > 1) {
-    message("More than one title matching the variable name, only the first will be used.")
-    title <- title[1]
+    stop("More than one title matching the variable name.")
   }
-
   unit <- sheet_extract("unit", var, googlesheet)
-
-  if (length(unit) > 1) {
-    message("More than one unit matching the variable name, only the first will be used.")
-    unit <- unit[1]
-  }
 
   if (include_outlier == TRUE) {
     return(continuous_point_plot_w_outliers(data, var, unit, title))

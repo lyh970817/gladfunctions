@@ -1,18 +1,18 @@
-#' @import dplyr
-#' @import readr
-#' @import googlesheets4
-#' @import tidyr
-#' @import purrr
-#' @import tibble
-#' @import stringr
-#' @import summarytools
-#' @import kableExtra
-#' @import ggformula
+#' @importFrom magrittr %>%
 #' @import ggplot2
+#' @import knitr
+#' @importFrom kableExtra kable_styling scroll_box
+#' @importFrom purrr map_chr map2_df map_dbl imap_dfc map_lgl map2_lgl
+#' @importFrom dplyr select group_by filter bind_cols count rename mutate
+#' left_join nth everything
+#' @importFrom stringr str_extract str_split
+#' @importFrom tidyr gather
 #' @importFrom ggrepel geom_text_repel
-#' @import psych
-#' @import lubridate
-#' @import car
+#' @importFrom psych scoreItems
+#' @importFrom stats fligner.test bartlett.test
+#' @importFrom car leveneTest
+#' @importFrom readr write_csv read_csv
+#' @importFrom googlesheets4 read_sheet sheets_sheets
 
 sheet_extract <- function(col, var, googlesheet) {
   # Extract values for a specified variable from a specified column

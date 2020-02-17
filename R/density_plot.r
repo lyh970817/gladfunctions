@@ -1,46 +1,48 @@
 palette <- c("#efc00b", "#b7dee8")
+assert_limits <- function(max, min) {
+  if (length(min) > 1) {
+    message(paste("More than one minimum for", var))
+    return(TRUE)
+  }
+  if (length(max) > 1) {
+    message(paste("More than one maximum for", var))
+    return(TRUE)
+  }
+  if (!is.numeric(min)) {
+    message(paste("Minimum for", var, "is not numeric."))
+    return(TRUE)
+  }
+  if (!is.numeric(max)) {
+    message(paste("Maximum for", var, "is not numeric."))
+    return(TRUE)
+  }
+  return(FALSE)
+}
 
 hist_count <- function(data, var, googlesheet, include_outlier = TRUE, binwidth) {
   title <- sheet_extract("title", var, googlesheet)
 
   if (length(title) > 1) {
-    warning("More than one question matching the variable name, only the first will be used.")
-    title <- title[1]
+    stop("More than one question matching the variable name.")
   }
 
   if (include_outlier == FALSE) {
-    min <- tryCatch(
-      expr = {
-        sheet_extract("min", var, googlesheet)
-      },
+    min <- tryCatch(sheet_extract("min", var, googlesheet),
       error = function(e) {
         min(data[[var]], na.rm = T)
       }
     )
-
-    max <- tryCatch(
-      expr = {
-        sheet_extract("max", var, googlesheet)
-      },
+    max <- tryCatch(sheet_extract("max", var, googlesheet),
       error = function(e) {
         max(data[[var]], na.rm = T)
       }
     )
-
-    if (length(min) > 1) {
-      message(paste("More than one minimum for", var))
-      min <- min[1]
+    if (assert_limits(max, min)) {
+      stop("Invalid limits")
     }
-
-    if (length(max) > 1) {
-      message(paste("More than one maximum for", var))
-      max <- max[1]
-    }
-
     length_missing <- sum(data[[var]] > max | data[[var]] < min, na.rm = T)
     data <- data %>% filter((data[[var]] <= max & data[[var]] >= min) | is.na(data[[var]]))
   }
-
   unit <- sheet_extract("unit", var, googlesheet)
 
   var_sex <- data %>%
@@ -123,44 +125,20 @@ hist_count <- function(data, var, googlesheet, include_outlier = TRUE, binwidth)
 
 density_plot_bysex <- function(data, var, title, unit, googlesheet, include_outlier = TRUE, binwidth) {
   if (include_outlier == FALSE) {
-    min <- tryCatch(
-      expr = {
-        sheet_extract("min", var, googlesheet)
-      },
+    min <- tryCatch(sheet_extract("min", var, googlesheet),
       error = function(e) {
         min(data[[var]], na.rm = T)
       }
     )
 
-    max <- tryCatch(
-      expr = {
-        sheet_extract("max", var, googlesheet)
-      },
+    max <- tryCatch(sheet_extract("max", var, googlesheet),
       error = function(e) {
         max(data[[var]], na.rm = T)
       }
     )
-
-    if (length(min) > 1) {
-      message(paste("More than one minimum for", var))
-      min <- min[1]
+    if (assert_limits(max, min)) {
+      stop("Invalid limits")
     }
-
-    if (length(max) > 1) {
-      message(paste("More than one maximum for", var))
-      max <- max[1]
-    }
-
-    if (!is.numeric(min)) {
-      message(paste("Minimum for", var, "is not numeric."))
-      min <- min(data[[var]], na.rm = T)
-    }
-
-    if (!is.numeric(max)) {
-      message(paste("Maximum for", var, "is not numeric."))
-      max <- max(data[[var]], na.rm = T)
-    }
-
     length_missing <- sum(data[[var]] > max | data[[var]] < min, na.rm = T)
     data <- data %>% filter((data[[var]] <= max & data[[var]] >= min) | is.na(data[[var]]))
   }
@@ -276,34 +254,19 @@ density_plot_bysex <- function(data, var, title, unit, googlesheet, include_outl
 
 density_plot <- function(data, var, title, unit, googlesheet, include_outlier = FALSE, binwidth) {
   if (include_outlier == FALSE) {
-    min <- tryCatch(
-      expr = {
-        sheet_extract("min", var, googlesheet)
-      },
+    min <- tryCatch(sheet_extract("min", var, googlesheet),
       error = function(e) {
         min(data[[var]], na.rm = T)
       }
     )
-
-    max <- tryCatch(
-      expr = {
-        sheet_extract("max", var, googlesheet)
-      },
+    max <- tryCatch(sheet_extract("max", var, googlesheet),
       error = function(e) {
         max(data[[var]], na.rm = T)
       }
     )
-
-    if (length(min) > 1) {
-      message(paste("More than one minimum for", var))
-      min <- min[1]
+    if (assert_limits(max, min)) {
+      stop("Invalid limits")
     }
-
-    if (length(max) > 1) {
-      message(paste("More than one maximum for", var))
-      max <- max[1]
-    }
-
     length_missing <- sum(data[[var]] > max | data[[var]] < min, na.rm = T)
     data <- data %>% filter((data[[var]] <= max & data[[var]] >= min) | is.na(data[[var]]))
   }
