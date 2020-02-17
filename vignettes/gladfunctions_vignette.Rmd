@@ -76,10 +76,12 @@ GLAD_clean("CIDID", dat_list)
 * Select variables to export with `Easy.name`
 
 ```{r select variables, eval = FALSE}
+sheet <- GLAD_sheet("PAD")
+
 PAD <-
-  readRDS(paste(clean_path, "rds/PAD.rds", sep = "/"))
+  readRDS(paste(clean_path, "rds/PAD_Renamed.rds", sep = "/"))
 which <- colnames(PAD)[10:15]
-GLAD_select(PAD, which, sheet)
+PAD_subset <- GLAD_select(PAD, which, sheet)
 ```
 
 ## Read in data file and dictionary sheet
