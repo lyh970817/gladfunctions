@@ -28,3 +28,7 @@ Imports:
     lubridate,
     car
 RoxygenNote: 7.0.2
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

@@ -8,8 +8,8 @@
 #' @import summarytools
 #' @import kableExtra
 #' @import ggformula
-#' @import ggrepel
 #' @import ggplot2
+#' @importFrom ggrepel geom_text_repel
 #' @import psych
 #' @import lubridate
 #' @import car

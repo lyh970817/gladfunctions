@@ -1,0 +1,195 @@
+---
+title: "Data Cleaning, Summary and Plotting for the GLAD Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{gladfunctions_vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  results = "asis",
+  prompt = FALSE,
+  cache = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  echo = TRUE
+)
+```
+
+```{r setup}
+library(gladfunctions)
+```
+
+```{r summarytools options, include = FALSE}
+st_options(
+  plain.ascii = FALSE,
+  style = "rmarkdown",
+  footnote = NA,
+  round.digits = 2,
+  subtitle.emphasis = FALSE
+)
+
+st_css()
+```
+## Cleaning Qualtrics Exports
+
+Specify the path to the directory containing the raw files
+exported directly from Qualtrics. This must contain the sign-up data and
+if an optional questionnaire is to be cleaned, the data of that optional
+questionnaire.
+
+```{r, raw path}
+raw_path <- "../../../../Research/Data/GLAD/GLAD-Questionnaires-Cleaning/data_raw/"
+```
+
+Specify the path to export files to
+
+```{r, clean path}
+clean_path <- "../../../../Research/Data/GLAD/GLAD-Questionnaires-Cleaning/data_clean/"
+```
+
+Read in data file as a list from raw_path
+
+```{r read data, eval = FALSE}
+dat_list <- GLAD_rawall(raw_path)
+```
+
+Clean all the questionnaire and export to clean_path
+
+```{r clean all, eval = FALSE}
+GLAD_cleanall(dat_list)
+```
+
+Clean the specified questionnaire and export to clean_path
+
+```{r clean specified questionnaire, eval = FALSE}
+GLAD_clean("CIDID", dat_list)
+```
+
+## Read in the data file and dictionary sheet
+
+`rds` is a fast loading file format that preserves variable type
+information that can be read like a csv.  I'm reading in the "renamed"
+version with easy names, but note that all the following should also work
+for unrenamed version ( with "New.variable" names)
+
+```{r read in data files}
+PAD <-
+  readRDS(paste(clean_path, "PAD_Renamed.rds", sep = "/"))
+
+sheet <- GLAD_sheet("PAD")
+```
+
+## Quantile Plot
+
+```{r vartest, results = "markup"}
+GLAD_qplot(data = PAD, var = "pad.frequency_panic_attacks")
+```
+
+## Variance Test
+
+```{r, results = "markup"}
+# Note the use of `resuls = "mark up"` here. I am overwriting
+# `results = "asis"` at the start of the script.
+# "asis" writes text outputs from `summarytools` and
+# `kable` to markdown format (so that they display nicely). Here we just
+# need the output of these tests remain as plain text.
+
+GLAD_vartest(data = PAD, var = "pad.frequency_panic_attacks", googlesheet = sheet)
+```
+
+For quantile plot and variance test, I also have a version that extracts
+all the continuous variables and loops through them.  Would that be more
+desirable?
+
+## Missingness
+
+```{r missingness}
+missingness <- GLAD_missing(data = PAD)
+ ```
+
+```{r missingness percent, results = "markup"}
+missingness$percent
+ ```
+
+```{r missingness descr}
+missingness$descr
+```
+
+```{r missingness freq}
+missingness$freq
+```
+
+```{r missingness table}
+print(missingness$table)
+```
+
+```{r missingness plot, fig.width = 10, fig.height = 10}
+missingness$plot
+```
+
+## Plots
+
+ ```{r sex plot, fig.width = 10}
+# Use `fig.width` to avoid the figure being truncated.
+GLAD_plot(data = PAD, var = "Sex", googlesheet = sheet)
+```
+
+```{r factor_plots, fig.width = 13}
+GLAD_plot(
+  data = PAD,
+  var = "pad.anx_future_panic_attacks",
+  googlesheet = sheet
+)
+```
+
+Note that `continuous_plots` also takes a logical argument `include_outlier`.
+For variables that don't have maximum or minumium in the dictionary hence haven't been cleaned,
+this is useful for deciding cut-offs.
+
+Set `binwidth = "FD"` to apply the Freedman-Diaconis rule for deciding
+optimal binwidth. The default is one and should be suitable for most
+variables in the data sets.
+
+```{r continuous_plots}
+continuous_plots <- GLAD_plot(
+  data = PAD,
+  var = "pad.frequency_panic_attacks",
+  googlesheet = sheet,
+  include_outlier = TRUE,
+  binwidth = "FD"
+)
+```
+
+```{r continuous_plots_point}
+continuous_plots$point
+```
+
+```{r continuous_plots_hist}
+continuous_plots$hist
+```
+
+```{r continuous_plots_density}
+continuous_plots$density
+```
+
+```{r continuous_densitybysex}
+continuous_plots$densitybysex
+```
+
+This plot is for categorical variables that allow multiple options to be selected.
+Put in one of the variables representing the options. Don't seem to have a
+generlized way to extract the tile from the dictionary. Specify the title yourself.
+
+```{r categorical_plot, fig.width = 10, fig.height = 10}
+GLAD_plot(
+  data = PAD,
+  var = "pad.sweating",
+  title = "title",
+  googlesheet = sheet
+)
+```
