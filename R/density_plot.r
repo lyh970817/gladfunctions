@@ -182,7 +182,7 @@ density_plot_bysex <- function(data, var, title, unit, googlesheet, include_outl
     guides(alpha = FALSE, color = FALSE, fill = FALSE)
 
   density_plot_bysex_base <- density_plot_bysex_base %>%
-    ggformula::gf_fitdistr(dist = "dnorm", color = "darkgrey")
+    gf_fitdistr(dist = "dnorm", color = "darkgrey")
 
   density_plot_bysex_base <- density_plot_bysex_base +
     geom_vline(
