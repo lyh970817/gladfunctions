@@ -2,7 +2,7 @@
 
 A collection of R functions to clean, export, summarize and plot GLAD questionnaire data.
 
-# How to Install
+## How to Install
 
 Requirs the `devtools` package:
 
@@ -10,7 +10,7 @@ Requirs the `devtools` package:
 devtools::install_github("lyh970817/gladfunctions")
 ```
 
-# Overview
+## Overview
 
 To see the full list of exported functions:
 
@@ -20,3 +20,7 @@ ls("package:gladfunctions")
 ```
 
 Or check out the vignette [here](https://htmlpreview.github.io/?https://github.com/lyh970817/gladfunctions/blob/master/vignettes/gladfunctions_vignette.html)
+
+## Issues
+
+Please open an issue on this GitHub page to report bugs and suggest changes.
