@@ -1,6 +1,3 @@
-#' @import summarytools
-#' @import kableExtra
-
 GLAD_missing_freq <- function(data) {
   missing_per <- tb(freq(data["Percentage of NA Per Person"]))[1]
   colnames <- dimnames(freq(data["NA Per Person"]))[[2]]

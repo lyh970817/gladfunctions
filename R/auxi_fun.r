@@ -6,7 +6,12 @@
 #' @import purrr
 #' @import tibble
 #' @import stringr
-#' @import tibble
+#' @import summarytools
+#' @import kableExtra
+#' @import ggformula
+#' @import ggrepel
+#' @import psych
+#' @import lubridate
 #' @import car
 
 sheet_extract <- function(col, var, googlesheet) {
