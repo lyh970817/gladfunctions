@@ -26,6 +26,6 @@ Requires raw Qualtrics exports or cleaned data files exported by the functions.
 
 Please speak to **Henry Rogers** in the **BioResource Office** for a `python` script to prepare Qulatrics exports (extract exports from Qualtrics and remove participant personal information).
 
-## Issues
+# Issues
 
 Please open an issue on this GitHub page to report bugs and suggest changes.
