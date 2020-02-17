@@ -9,6 +9,7 @@
 #' @import kableExtra
 #' @import ggformula
 #' @import ggrepel
+#' @import ggplot2
 #' @import psych
 #' @import lubridate
 #' @import car
