@@ -31,6 +31,13 @@ to_csv <- function(data_cleaned, data_raw) {
 
 GLAD_export <- function(data_cleaned, data_raw, questionnaire, dirpath, googlesheet, rename = FALSE) {
   data_cleaned_csv <- to_csv(data_cleaned, data_raw)
+
+  dir.create(file.path(dirpath, "csv_renamed"), showWarnings = FALSE)
+  dir.create(file.path(dirpath, "csv"), showWarnings = FALSE)
+
+  dir.create(file.path(dirpath, "rds_renamed"), showWarnings = FALSE)
+  dir.create(file.path(dirpath, "rds"), showWarnings = FALSE)
+
   if (rename == TRUE) {
     questionnaire <- paste0(questionnaire, "_Renamed")
 
