@@ -63,6 +63,16 @@ get_categvars <- function(var, googlesheet) {
   return(vars)
 }
 
+#' Exports Selected Variables From a Data Set
+#'
+#' Exports selected variables from a data set by specifying their indices
+#' on the dictionary sheet.
+#'
+#' @param data The dataframe containing the variables to be exported,
+#' outputted by 'GLAD_clean' or 'GLAD_cleanall'.
+#' @param which An integer vector indicating the items to exported,
+#' which corresponds to indices on the dictionary sheet.
+#' @export
 GLAD_select <- function(data, which, googlesheet) {
   # Selection is based on googlesheet index (formula is which - 2)
   # I thought this might be the most easy.

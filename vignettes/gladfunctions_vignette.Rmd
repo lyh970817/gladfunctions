@@ -1,11 +1,11 @@
 ---
-title: "Data Cleaning, Summary and Plotting for the GLAD Data"
+title: "Functions for Cleaning, Exporting, Summarising and Plotting the GLAD Data"
 output:
   html_document:
     toc: true
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{gladfunctions_vignette}
+  %\VignetteIndexEntry{GLAD Functions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

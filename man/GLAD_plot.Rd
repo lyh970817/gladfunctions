@@ -33,8 +33,8 @@ for deciding optimal binwidth will be applied.}
 the dictionary sheet of the variables in 'data'.}
 }
 \value{
-For non-continuous variables, a single plot. For continuous
-variables, a list of plots.
+For non-continuous variables, a single ggplot object. For continuous
+variables, a named list of ggplot objects.
 }
 \description{
 Generates plots for the specified variable in the GLAD data.

@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "yuhao.lin@kcl.ac.uk")
 Description: A collection of functions used to clean, export, plot
-    and summarize phenotypic questionnaire data collected in the GLAD (Genetic Links to
+    and summarise phenotypic questionnaire data collected in the GLAD (Genetic Links to
     Depression and Anxiety) study.
 Encoding: UTF-8
 LazyData: true
@@ -28,7 +28,7 @@ Imports:
     lubridate,
     car
 RoxygenNote: 7.0.2
-Suggests: 
+Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr

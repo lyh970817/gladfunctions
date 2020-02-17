@@ -13,7 +13,7 @@ GLAD_qplot(data, var)
 be plotted}
 }
 \value{
-A quantile plot produced with 'ggplot2'
+A ggplot object.
 }
 \description{
 Generates quantile plots for a specified variable in the GLAD data.
