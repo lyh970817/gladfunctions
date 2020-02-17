@@ -2,7 +2,6 @@
 #' @import readr
 #' @import googlesheets4
 #' @import tidyr
-#' @import ggplot2
 #' @import purrr
 #' @import tibble
 #' @import stringr
