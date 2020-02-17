@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/lyh970817/gladfunctions/blob/master/glad_logo.jpg" width="350" class="center">
+</p>
+  
 # gladfunctions
 
 A collection of R functions to clean, export, summarise and plot questionnaire data of the GLAD (*Genetic Links to Depression and Anxiety*) study.
