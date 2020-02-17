@@ -27,7 +27,6 @@ options(gargle_oauth_email = TRUE)
 
 ```{r setup}
 library(gladfunctions)
-source("../R/auxi_fun.r")
 ```
 
 ## Cleaning Qualtrics Exports
@@ -65,6 +64,7 @@ Clean a specified questionnaire and export to clean_path.
 ```{r clean specified questionnaire, eval = FALSE}
 GLAD_clean("CIDID", dat_list)
 ```
+
 Select variables to export with Easy.name
 
 ```{r select variables, eval = FALSE}
