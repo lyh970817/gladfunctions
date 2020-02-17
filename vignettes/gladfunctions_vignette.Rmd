@@ -1,6 +1,9 @@
 ---
 title: "Data Cleaning, Summary and Plotting for the GLAD Data"
-output: rmarkdown::html_vignette
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
 vignette: >
   %\VignetteIndexEntry{gladfunctions_vignette}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,7 +13,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
+  comment = NA,
   results = "asis",
   prompt = FALSE,
   cache = FALSE,
@@ -21,50 +24,40 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-devtools::install_github("lyh970817/gladfunctions")
+library(gladfunctions)
 ```
 
-```{r summarytools options, include = FALSE}
-st_options(
-  plain.ascii = FALSE,
-  style = "rmarkdown",
-  footnote = NA,
-  round.digits = 2,
-  subtitle.emphasis = FALSE
-)
-
-st_css()
-```
 ## Cleaning Qualtrics Exports
 
-Specify the path to the directory containing the raw files
-exported directly from Qualtrics. This must contain the sign-up data and
-if an optional questionnaire is to be cleaned, the data of that optional
-questionnaire.
+Specify the path to the directory containing the raw files exported
+directly from Qualtrics. This must contain the sign-up data and if an
+optional questionnaire is to be cleaned, the data of that optional
+questionnaire. We have a `python` script for exporting Qualtrics data,
+please speak to Henry Rogers in the BioResource office.
 
 ```{r, raw path}
 raw_path <- "../../../../Research/Data/GLAD/GLAD-Questionnaires-Cleaning/data_raw/"
 ```
 
-Specify the path to export files to
+Specify the path to export files to.
 
 ```{r, clean path}
 clean_path <- "../../../../Research/Data/GLAD/GLAD-Questionnaires-Cleaning/data_clean/"
 ```
 
-Read in data file as a list from raw_path
+Read in data file as a list from raw_path.
 
 ```{r read data, eval = FALSE}
 dat_list <- GLAD_rawall(raw_path)
 ```
 
-Clean all the questionnaire and export to clean_path
+Clean all the questionnaire and export to clean_path.
 
 ```{r clean all, eval = FALSE}
 GLAD_cleanall(dat_list)
 ```
 
-Clean the specified questionnaire and export to clean_path
+Clean a specified questionnaire and export to clean_path.
 
 ```{r clean specified questionnaire, eval = FALSE}
 GLAD_clean("CIDID", dat_list)
@@ -73,7 +66,7 @@ GLAD_clean("CIDID", dat_list)
 ## Read in the data file and dictionary sheet
 
 `rds` is a fast loading file format that preserves variable type
-information that can be read like a csv.  I'm reading in the "renamed"
+information that can be read like a csv.  I'm reading in the "_Renamed"
 version with easy names, but note that all the following should also work
 for unrenamed version ( with "New.variable" names)
 
@@ -124,6 +117,9 @@ missingness$descr
 missingness$freq
 ```
 
+A value of "1" for a variable in the left most column indicates which
+missing percentage it has.
+
 ```{r missingness table}
 print(missingness$table)
 ```
@@ -148,7 +144,7 @@ GLAD_plot(
 ```
 
 Note that `continuous_plots` also takes a logical argument `include_outlier`.
-For variables that don't have maximum or minumium in the dictionary hence haven't been cleaned,
+For variables that don't have maximum or minimum in the dictionary hence haven't been cleaned,
 this is useful for deciding cut-offs.
 
 Set `binwidth = "FD"` to apply the Freedman-Diaconis rule for deciding
@@ -183,7 +179,7 @@ continuous_plots$densitybysex
 
 This plot is for categorical variables that allow multiple options to be selected.
 Put in one of the variables representing the options. Don't seem to have a
-generlized way to extract the tile from the dictionary. Specify the title yourself.
+generalized way to extract the tile from the dictionary. Specify the title yourself.
 
 ```{r categorical_plot, fig.width = 10, fig.height = 10}
 GLAD_plot(
