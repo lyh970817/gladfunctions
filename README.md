@@ -1,6 +1,6 @@
 # gladfunctions
 
-A collection of R functions to clean, export, summarize and plot GLAD (Genetic Links to Depression and Anxiety) questionnaire data.
+A collection of R functions to clean, export, summarize and plot GLAD (*Genetic Links to Depression and Anxiety*) questionnaire data.
 
 
 ## How to Install
