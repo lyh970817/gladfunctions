@@ -77,6 +77,12 @@ PAD <-
 sheet <- GLAD_sheet("PAD")
 ```
 
+## Add derived variables to data
+
+```{r add derived variables}
+PAD <- GLAD_derive(PAD, sheet)
+```
+
 ## Quantile Plot
 
 ```{r vartest, results = "markup"}

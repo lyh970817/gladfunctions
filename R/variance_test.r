@@ -12,7 +12,7 @@
 #' @param data The dataframe containing the variable to be plotted.
 #' @param var A character string of one element specifying the variable to
 #' be plotted
-#' @return A quantile plot produced with 'ggplot2'
+#' @return A ggplot object.
 #' @export
 GLAD_qplot <- function(data, var) {
   return(ggplot(data, aes_string(sample = var)) + stat_qq())

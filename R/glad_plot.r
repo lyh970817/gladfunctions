@@ -14,8 +14,8 @@
 #' for deciding optimal binwidth will be applied.
 #' @param googlesheet A googlesheet produced by "GLAD_sheet" that contain
 #' the dictionary sheet of the variables in 'data'.
-#' @return For non-continuous variables, a single plot. For continuous
-#' variables, a list of plots.
+#' @return For non-continuous variables, a single ggplot object. For continuous
+#' variables, a named list of ggplot objects.
 #' @export
 GLAD_plot <- function(data, var, title = "", include_outlier = TRUE, binwidth = "", googlesheet) {
   if (!var %in% colnames(data)) {
