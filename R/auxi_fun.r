@@ -6,6 +6,8 @@
 #' @import purrr
 #' @import tibble
 #' @import stringr
+#' @import tibble
+#' @import car
 
 sheet_extract <- function(col, var, googlesheet) {
   # Extract values for a specified variable from a specified column
