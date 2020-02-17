@@ -24,7 +24,7 @@ Or check out the `rmarkdown` vignette [here](https://htmlpreview.github.io/?http
 
 Requires raw Qualtrics exports or cleaned data files exported by the functions. 
 
-Please speak to **Henry Rogers** in the **BioResource office** for a `python` script to prepare Qulatrics exports (extract exports from Qualtrics and remove participant personal information).
+Please speak to **Henry Rogers** in the **BioResource Office** for a `python` script to prepare Qulatrics exports (extract exports from Qualtrics and remove participant personal information).
 
 ## Issues
 
