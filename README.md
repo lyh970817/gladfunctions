@@ -2,6 +2,7 @@
 
 A collection of R functions to clean, export, summarize and plot GLAD questionnaire data.
 
+
 ## How to Install
 
 Requirs the `devtools` package:
