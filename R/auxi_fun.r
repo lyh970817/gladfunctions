@@ -6,6 +6,7 @@
 #' @import tibble
 #' @import stringr
 #' @import summarytools
+#' @importFrom summarytools st_options st_css
 #' @import kableExtra
 #' @import ggformula
 #' @import ggplot2

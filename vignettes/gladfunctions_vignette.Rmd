@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(gladfunctions)
+devtools::install_github("lyh970817/gladfunctions")
 ```
 
 ```{r summarytools options, include = FALSE}
