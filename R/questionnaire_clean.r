@@ -35,7 +35,7 @@ GLAD_removehead <- function(data, googlesheet) {
   return(data[!colnames(data) %in% head_vars])
 }
 
-questionnaire_clean <- function(questionnaire, data_raw) {
+questionnaire_clean <- function(questionnaire, data_raw, limits) {
   sheet <- GLAD_sheet(questionnaire)
 
   # "oldvar" are variables names Qualtrics raw files have.
@@ -89,7 +89,7 @@ questionnaire_clean <- function(questionnaire, data_raw) {
     .[complete.cases(.[["Sex"]]), ]
 
   data_cleaned <- data_raw %>%
-    GLAD_recode_df(googlesheet = sheet)
+    GLAD_recode_df(googlesheet = sheet, limits = TRUE)
 
   # This exports New.variable name files.
   GLAD_export(data_cleaned, data_raw,
@@ -113,13 +113,13 @@ questionnaire_clean <- function(questionnaire, data_raw) {
 #' @param questionnaire A questionnaire that is to be cleaned.
 #' @param dat_list A named list of dataframes produced by 'GLAD_rawall'.
 #' @export
-GLAD_clean <- function(questionnaire, dat_list) {
+GLAD_clean <- function(questionnaire, dat_list, limits) {
   # We always need "DEM" to extract "Sex", "Age" and "Birthyear"
   dem <- dat_list[["DEM"]]
   if (questionnaire %in% sign_up) {
     # If the questionnaire is in sign-up hence in "DEM",
     # we already have "Sex", "Age" and "Birthyear" in the same file.
-    try(questionnaire_clean(questionnaire, dem))
+    try(questionnaire_clean(questionnaire, dem, limits))
   } else if (questionnaire %in% names(dat_list)) {
     # if the questionnaire is not in sign-up we need to merge it with
     # those variables in "DEM".
@@ -134,7 +134,7 @@ GLAD_clean <- function(questionnaire, dat_list) {
       ],
       by = "ExternalReference"
       ) %>%
-      questionnaire_clean(questionnaire, .))
+      questionnaire_clean(questionnaire, ., limits))
   }
 }
 
@@ -144,9 +144,11 @@ GLAD_clean <- function(questionnaire, dat_list) {
 #' and creates exports.
 #'
 #' @param dat_list A named list of dataframes produced by 'GLAD_rawall'.
+#' @param limits A logical indicating whether limits (min and max) are to
+#' be applied
 #' @export
-GLAD_cleanall <- function(dat_list) {
+GLAD_cleanall <- function(dat_list, limits = TRUE) {
   for (q in questionnaires) {
-    GLAD_clean(q, dat_list)
+    GLAD_clean(q, dat_list, limits)
   }
 }

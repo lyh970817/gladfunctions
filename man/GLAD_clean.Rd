@@ -4,7 +4,7 @@
 \alias{GLAD_clean}
 \title{Cleans One Specified Questionnaire}
 \usage{
-GLAD_clean(questionnaire, dat_list)
+GLAD_clean(questionnaire, dat_list, limits)
 }
 \arguments{
 \item{questionnaire}{A questionnaire that is to be cleaned.}

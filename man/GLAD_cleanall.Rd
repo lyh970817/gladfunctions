@@ -4,10 +4,13 @@
 \alias{GLAD_cleanall}
 \title{Cleans All Questionnaires In a List}
 \usage{
-GLAD_cleanall(dat_list)
+GLAD_cleanall(dat_list, limits = TRUE)
 }
 \arguments{
 \item{dat_list}{A named list of dataframes produced by 'GLAD_rawall'.}
+
+\item{limits}{A logical indicating whether limits (min and max) are to
+be applied}
 }
 \description{
 Cleans all the questionnaires in a list produced by 'GLAD_rawall'

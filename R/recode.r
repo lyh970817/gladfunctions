@@ -1,4 +1,4 @@
-GLAD_recode <- function(x, var, googlesheet) {
+GLAD_recode <- function(x, var, googlesheet, limits) {
   if (all(is.na(sheet_extract("newvar", var, googlesheet)))) {
     # `var` comes from the `imap_dfc` later so is a column name.
     message(paste(
@@ -78,7 +78,6 @@ GLAD_recode <- function(x, var, googlesheet) {
       }
     }
 
-
     # If a question is seen but not answered and it is not a categorical
     # question that allow multiple options to be selected, the response is automatically
     # exported as -99, but this might not be in the dictionary.
@@ -128,6 +127,10 @@ GLAD_recode <- function(x, var, googlesheet) {
         return(as.numeric(x))
       }
     )
+
+    if (limits == FALSE) {
+      return(x)
+    }
 
     min_raw <- unique(sheet_extract("min", var, googlesheet))
     max_raw <- unique(sheet_extract("max", var, googlesheet))
@@ -185,11 +188,11 @@ GLAD_recode <- function(x, var, googlesheet) {
   return(x)
 }
 
-GLAD_recode_df <- function(data, googlesheet) {
+GLAD_recode_df <- function(data, googlesheet, limits) {
   data_cleaned <- data %>%
     select(-ExternalReference, -Sex, -Age, -Birthyear) %>%
     GLAD_rename(googlesheet = googlesheet) %>%
-    imap_dfc(GLAD_recode, googlesheet = googlesheet) %>%
+    imap_dfc(GLAD_recode, googlesheet = googlesheet, limits) %>%
     bind_cols(data[c(
       "ExternalReference",
       "Sex",
