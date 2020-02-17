@@ -19,4 +19,4 @@ library("tinyutils")
 ls("package:gladfunctions")
 ```
 
-Or check out the vignette [here]()
+Or check out the vignette [here](https://htmlpreview.github.io/?https://github.com/lyh970817/gladfunctions/blob/master/vignettes/gladfunctions_vignette.html)

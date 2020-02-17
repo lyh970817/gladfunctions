@@ -40,7 +40,7 @@ GLAD_export <- function(data_cleaned, data_raw, questionnaire, dirpath, googlesh
       to = "easyname"
     )
 
-    csv_name <- paste0(questionnaire, ".csv")
+    csv_name <- paste0("csv_renamed/", questionnaire, ".csv")
     csv_path <- paste0(dirpath, csv_name)
     write_csv(
       x = data_easyname_csv,
@@ -54,14 +54,14 @@ GLAD_export <- function(data_cleaned, data_raw, questionnaire, dirpath, googlesh
     ) %>%
       add_numeric(data_raw)
 
-    rds_name <- paste0(questionnaire, ".rds")
+    rds_name <- paste0("rds_renamed/", questionnaire, ".rds")
     rds_path <- paste0(dirpath, rds_name)
     saveRDS(
       data_easyname_numeric,
       file = rds_path
     )
   } else {
-    csv_name <- paste0(questionnaire, ".csv")
+    csv_name <- paste0("csv/", questionnaire, ".csv")
     csv_path <- paste0(dirpath, csv_name)
     write_csv(
       x = data_cleaned_csv,
@@ -69,7 +69,7 @@ GLAD_export <- function(data_cleaned, data_raw, questionnaire, dirpath, googlesh
     )
 
     data_cleaned_numeric <- add_numeric(data_cleaned, data_raw)
-    rds_name <- paste0(questionnaire, ".rds")
+    rds_name <- paste0("rds/", questionnaire, ".rds")
     rds_path <- paste0(dirpath, rds_name)
     saveRDS(
       data_cleaned_numeric,
