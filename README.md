@@ -16,7 +16,7 @@ devtools::install_github("lyh970817/gladfunctions")
 To see the full list of exported functions:
 
 ```{r}
-library("tinyutils")
+library(gladfunctions)
 ls("package:gladfunctions")
 ```
 
@@ -24,8 +24,7 @@ Or check out the `rmarkdown` vignette [here](https://htmlpreview.github.io/?http
 
 Requires raw Qualtrics exports or cleaned data files exported by the functions. 
 
-Please speak to Henry Rogers in the BioResource office for a `python` script to prepare Qulatrics exports (extract exports 
-from Qualtrics and remove participant personal information).
+Please speak to **Henry Rogers** in the **BioResource office** for a `python` script to prepare Qulatrics exports (extract exports from Qualtrics and remove participant personal information).
 
 ## Issues
 
