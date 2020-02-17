@@ -21,5 +21,10 @@ Imports:
     tibble,
     stringr,
     summarytools,
-    kableExtra
+    kableExtra,
+    ggformula,
+    ggrepel,
+    psych,
+    lubridate,
+    car
 RoxygenNote: 7.0.2

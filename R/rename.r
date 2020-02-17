@@ -1,5 +1,3 @@
-require(tidyverse)
-
 test_nonames <- function(sheet, pos, from = "oldvar", to = "newvar") {
   # Test if there is a one-to-one mapping between Qualtrics.variable nad
   # New.variable, and between New.variable and Easy.name.

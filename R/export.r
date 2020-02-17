@@ -1,6 +1,3 @@
-require(dplyr)
-require(readr)
-
 add_numeric <- function(data_cleaned, data_raw) {
   # Add numeric version variables for factor varaibles.
 

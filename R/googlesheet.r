@@ -1,5 +1,3 @@
-require(googlesheets4)
-
 GLAD_url <- "https://docs.google.com/spreadsheets/d/1X9LfgPpBsS2zzVSwkncX8aP5YWuEH9PdW11KRDRcZ38/edit#gid=1962975491"
 
 #' Read in The Dictionary Sheet

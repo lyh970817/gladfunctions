@@ -1,5 +1,3 @@
-require(psych)
-
 get_keys <- function(items, googlesheet) {
   map_dbl(items, function(x) {
     googlesheet[["score_key"]][which(googlesheet[["easyname"]] == x)][1] %>%

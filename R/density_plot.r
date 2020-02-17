@@ -1,7 +1,3 @@
-require(tidyverse)
-require(ggformula)
-require(ggrepel)
-
 palette <- c("#efc00b", "#b7dee8")
 
 hist_count <- function(data, var, googlesheet, include_outlier = TRUE, binwidth) {
@@ -424,7 +420,7 @@ density_plot_all <- function(data, var, googlesheet, bysex = FALSE, include_outl
   title <- sheet_extract("title", var, googlesheet)
   unit <- sheet_extract("unit", var, googlesheet)
   if (binwidth == "FD") {
-        binwidth <- 2 * IQR(data[[var]], na.rm = TRUE) / length(na.omit(data[[var]]))^(1 / 3)
+    binwidth <- 2 * IQR(data[[var]], na.rm = TRUE) / length(na.omit(data[[var]]))^(1 / 3)
   } else {
     binwidth <- 1
   }

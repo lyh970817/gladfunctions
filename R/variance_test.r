@@ -1,6 +1,3 @@
-require(ggplot2)
-require(car)
-
 # GLAD_qplot <- function(data, googlesheet) {
 #     continuous_var <- googlesheet[["newvar"]][which(googlesheet[["type"]] == "Numeric/Continuous")]
 #     for (i in seq_along(continuous_var)) {

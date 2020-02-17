@@ -1,6 +1,3 @@
-require(tidyverse)
-require(lubridate)
-
 GLAD_recode <- function(x, var, googlesheet) {
   if (all(is.na(sheet_extract("newvar", var, googlesheet)))) {
     # `var` comes from the `imap_dfc` later so is a column name.

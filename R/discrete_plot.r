@@ -1,5 +1,3 @@
-require(tidyverse)
-
 palette <- c("#efc00b", "#b7dee8")
 
 sex_plot <- function(data) {
