@@ -1,0 +1,25 @@
+Package: gladfunctions
+Title: GLAD Functions
+Version: 0.0.0.9000
+Authors@R:
+    person(given = "Yuhao",
+           family = "Lin",
+           role = c("aut", "cre"),
+           email = "yuhao.lin@kcl.ac.uk")
+Description: A collection of functions used to clean, export, plot
+    and summarize phenotypic questionnaire data collected in the GLAD (Genetic Links to
+    Depression and Anxiety) study.
+Encoding: UTF-8
+LazyData: true
+Imports:
+    dplyr,
+    readr,
+    googlesheets4,
+    tidyr,
+    ggplot2,
+    purrr,
+    tibble,
+    stringr,
+    summarytools,
+    kableExtra
+RoxygenNote: 7.0.2
