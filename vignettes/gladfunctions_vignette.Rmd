@@ -1,7 +1,10 @@
 ---
 title: "Functions for Cleaning, Exporting, Summarising and Plotting the GLAD Data"
+author: Yuhao Lin
+date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
   html_document:
+    theme: paper
     toc: true
     toc_depth: 2
 vignette: >
@@ -13,7 +16,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = NA,
+  comment = ">",
   results = "asis",
   prompt = FALSE,
   cache = FALSE,
@@ -21,6 +24,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   echo = TRUE
 )
+
 # googlesheets4 option, see https://gargle.r-lib.org/articles/non-interactive-auth.html
 options(gargle_oauth_email = TRUE)
 ```
@@ -29,63 +33,66 @@ options(gargle_oauth_email = TRUE)
 library(gladfunctions)
 ```
 
-## Cleaning Qualtrics Exports
+## Clean Qualtrics exports
 
-Specify the path to the directory containing the raw files exported
-directly from Qualtrics. This must contain the sign-up data and if an
-optional questionnaire is to be cleaned, the data of that optional
-questionnaire. We have a `python` script for exporting Qualtrics data,
-please speak to Henry Rogers in the BioResource office.
+* Specify the path to the directory containing the raw files exported
+  directly from Qualtrics. This must contain the sign-up data and if an
+  optional questionnaire is to be cleaned, the data of that optional
+  questionnaire.
+
+* We have a `python` script to prepare raw data files (export Qualtrics
+  data and remove participant personal information). Please speak to Henry
+  Rogers in the BioResource office.
 
 ```{r, raw path}
 raw_path <- "../../../../Research/Data/GLAD/GLAD-Questionnaires-Cleaning/data_raw/"
 ```
 
-Specify the path to export files to.
+* Specify the path to export files to
 
 ```{r, clean path}
 clean_path <- "../../../../Research/Data/GLAD/GLAD-Questionnaires-Cleaning/data_clean/"
 ```
 
-Read in data file as a list from raw_path.
+* Read in data file as a list from `raw_path`
 
 ```{r read data, eval = FALSE}
 dat_list <- GLAD_rawall(raw_path)
 ```
 
-Clean all the questionnaire and export to clean_path.
+* Clean all the questionnaire and export to `clean_path`
 
 ```{r clean all, eval = FALSE}
 GLAD_cleanall(dat_list)
 ```
 
-Clean a specified questionnaire and export to clean_path.
+* Clean a specified questionnaire and export to `clean_path`
 
 ```{r clean specified questionnaire, eval = FALSE}
 GLAD_clean("CIDID", dat_list)
 ```
 
-Select variables to export with Easy.name
+* Select variables to export with `Easy.name`
 
 ```{r select variables, eval = FALSE}
 PAD <-
-  readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
+  readRDS(paste(clean_path, "rds/PAD.rds", sep = "/"))
 which <- colnames(PAD)[10:15]
-
 GLAD_select(PAD, which, sheet)
 ```
 
-## Read in the data file and dictionary sheet
+## Read in data file and dictionary sheet
 
-`rds` is a fast loading file format that preserves variable type
-information that can be read like a csv.  I'm reading in the "_Renamed"
-version with easy names, but note that all the following should also work
-for unrenamed version ( with "New.variable" names)
+* `rds` is a fast loading file format that preserves variable type
+  information that can be read like a csv.
+
+* I'm reading in the '_Renamed' version with `Easy.name`, but note that all
+  the following should also work for the unrenamed version ( with
+  `New.variable` names)
 
 ```{r read in data files}
 PAD <-
   readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
-
 sheet <- GLAD_sheet("PAD")
 ```
 
@@ -101,7 +108,7 @@ PAD <- GLAD_derive(PAD, sheet)
 GLAD_qplot(data = PAD, var = "pad.frequency_panic_attacks")
 ```
 
-## Variance Test
+## Variance Tests
 
 ```{r, results = "markup"}
 # Note the use of `resuls = "mark up"` here. I am overwriting
@@ -119,9 +126,13 @@ desirable?
 
 ## Missingness
 
+* The `GLAD_missng` function returns a named list of various missingness summaries and plots.
+
 ```{r missingness}
 missingness <- GLAD_missing(data = PAD)
  ```
+
+* Percentage of participants with no variable missing.
 
 ```{r missingness percent, results = "markup"}
 missingness$percent
@@ -148,6 +159,10 @@ missingness$plot
 
 ## Plots
 
+* The `GLAD_plot` function returns plots for a specified variable,
+  different plots are returned depending on the variable type, the
+  information of which is provided through the `googlesheet` argument.
+
  ```{r sex plot, fig.width = 10}
 # Use `fig.width` to avoid the figure being truncated.
 GLAD_plot(data = PAD, var = "Sex", googlesheet = sheet)
@@ -161,13 +176,17 @@ GLAD_plot(
 )
 ```
 
-Note that `continuous_plots` also takes a logical argument `include_outlier`.
-For variables that don't have maximum or minimum in the dictionary hence haven't been cleaned,
-this is useful for deciding cut-offs.
+* With variables of `Numeric/Continuous` type, multiple plot objects are
+  returned in a named list.
 
-Set `binwidth = "FD"` to apply the Freedman-Diaconis rule for deciding
-optimal binwidth. The default is one and should be suitable for most
-variables in the data sets.
+* Note that for these variables, it is possible to suuply a logical
+  argument `include_outlier`. For variables that don't have maximum or
+  minimum in the dictionary hence haven't been cleaned, this is useful for
+  deciding cut-offs.
+
+* Set `binwidth = "FD"` to apply the Freedman-Diaconis rule for deciding
+  optimal binwidth. The default is '1' and should be suitable for most
+  variables in the data sets.
 
 ```{r continuous_plots}
 continuous_plots <- GLAD_plot(
@@ -195,15 +214,17 @@ continuous_plots$density
 continuous_plots$densitybysex
 ```
 
-This plot is for categorical variables that allow multiple options to be selected.
-Put in one of the variables representing the options. Don't seem to have a
-generalized way to extract the tile from the dictionary. Specify the title yourself.
+* This plot is for categorical variables that allow multiple options to be
+  selected.  Put in one of the variables representing the options.
+
+* Don't seem to have a generalized way to extract the tile from the
+  dictionary. Specify the title yourself.
 
 ```{r categorical_plot, fig.width = 10, fig.height = 10}
 GLAD_plot(
   data = PAD,
   var = "pad.sweating",
-  title = "title",
+  title = "PAD Screening",
   googlesheet = sheet
 )
 ```
