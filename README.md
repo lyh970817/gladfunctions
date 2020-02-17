@@ -1,6 +1,6 @@
 # gladfunctions
 
-A collection of R functions to clean, export, summarize and plot GLAD questionnaire data.
+A collection of R functions to clean, export, summarize and plot GLAD (Genetic Links to Depression and Anxiety) questionnaire data.
 
 
 ## How to Install
@@ -21,6 +21,9 @@ ls("package:gladfunctions")
 ```
 
 Or check out the vignette [here](https://htmlpreview.github.io/?https://github.com/lyh970817/gladfunctions/blob/master/vignettes/gladfunctions_vignette.html)
+
+Requires the raw Qualtrics exports or the cleaned data files exported by the functions. Please speak to Henry Rogers 
+in the BioResource office for a `python` script to extract exports from Qualtrics.
 
 ## Issues
 
