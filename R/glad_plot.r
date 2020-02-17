@@ -39,7 +39,7 @@ GLAD_plot <- function(data, var, title = "", include_outlier = TRUE, binwidth = 
       return(factor_plot(data, var, googlesheet))
     }
     if (length(catevars) > 1) {
-      return(categorical_plot(data, var, title = "", googlesheet))
+      return(categorical_plot(data, var, title = title, googlesheet))
     }
   }
 }

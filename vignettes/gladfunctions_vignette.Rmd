@@ -21,10 +21,13 @@ knitr::opts_chunk$set(
   warning = FALSE,
   echo = TRUE
 )
+# googlesheets4 option, see https://gargle.r-lib.org/articles/non-interactive-auth.html
+options(gargle_oauth_email = TRUE)
 ```
 
 ```{r setup}
 library(gladfunctions)
+source("../R/auxi_fun.r")
 ```
 
 ## Cleaning Qualtrics Exports
@@ -62,6 +65,15 @@ Clean a specified questionnaire and export to clean_path.
 ```{r clean specified questionnaire, eval = FALSE}
 GLAD_clean("CIDID", dat_list)
 ```
+Select variables to export with Easy.name
+
+```{r select variables, eval = FALSE}
+PAD <-
+  readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
+which <- colnames(PAD)[10:15]
+
+GLAD_select(PAD, which, sheet)
+```
 
 ## Read in the data file and dictionary sheet
 
@@ -72,7 +84,7 @@ for unrenamed version ( with "New.variable" names)
 
 ```{r read in data files}
 PAD <-
-  readRDS(paste(clean_path, "PAD_Renamed.rds", sep = "/"))
+  readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
 
 sheet <- GLAD_sheet("PAD")
 ```
@@ -123,7 +135,7 @@ missingness$descr
 missingness$freq
 ```
 
-A value of "1" for a variable in the left most column indicates which
+A value of '1' for a variable in the left most column indicates which
 missing percentage it has.
 
 ```{r missingness table}

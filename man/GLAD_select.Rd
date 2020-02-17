@@ -10,10 +10,11 @@ GLAD_select(data, which, googlesheet)
 \item{data}{The dataframe containing the variables to be exported,
 outputted by 'GLAD_clean' or 'GLAD_cleanall'.}
 
-\item{which}{An integer vector indicating the items to exported,
-which corresponds to indices on the dictionary sheet.}
+\item{which}{An character vector indicating the items to be export.}
+
+\item{googlesheet}{A dataframe created by 'GLAD_sheet' that contains
+corresponding dictionary information for 'data'.}
 }
 \description{
-Exports selected variables from a data set by specifying their indices
-on the dictionary sheet.
+Exports selected variables from a data set by specifying their names.
 }

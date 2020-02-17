@@ -6,7 +6,6 @@
 #' @import tibble
 #' @import stringr
 #' @import summarytools
-#' @importFrom summarytools st_options st_css
 #' @import kableExtra
 #' @import ggformula
 #' @import ggplot2
@@ -65,22 +64,30 @@ get_categvars <- function(var, googlesheet) {
 
 #' Exports Selected Variables From a Data Set
 #'
-#' Exports selected variables from a data set by specifying their indices
-#' on the dictionary sheet.
+#' Exports selected variables from a data set by specifying their names.
 #'
 #' @param data The dataframe containing the variables to be exported,
 #' outputted by 'GLAD_clean' or 'GLAD_cleanall'.
-#' @param which An integer vector indicating the items to exported,
-#' which corresponds to indices on the dictionary sheet.
+#' @param which An character vector indicating the items to be export.
+#' @param googlesheet A dataframe created by 'GLAD_sheet' that contains
+#' corresponding dictionary information for 'data'.
 #' @export
 GLAD_select <- function(data, which, googlesheet) {
-  # Selection is based on googlesheet index (formula is which - 2)
-  # I thought this might be the most easy.
-
-  if (any(colnames(data)) %in% googlesheet[["newvar"]]) {
-    return(data[googlesheet[["newvar"]][which - 2]])
+  if (any(colnames(data) %in% googlesheet[["newvar"]])) {
+    items <- googlesheet[["newvar"]][googlesheet[["easyname"]] %in% which]
+    items_num <- paste(items, "numeric", sep = ".")
+    items_all <- c(items, items_num)
+    return(bind_cols(
+      data[c("ID", "Sex", "Age", "Birthyear")],
+      data[colnames(data) %in% items_all]
+    ))
   }
-  if (any(colnames(data)) %in% googlesheet[["easyname"]]) {
-    return(data[googlesheet[["easyname"]][which - 2]])
+  if (any(colnames(data) %in% googlesheet[["easyname"]])) {
+    items_num <- paste(which, "numeric", sep = ".")
+    items_all <- c(which, items_num)
+    return(bind_cols(
+      data[c("ID", "Sex", "Age", "Birthyear")],
+      data[colnames(data) %in% items_all]
+    ))
   }
 }
