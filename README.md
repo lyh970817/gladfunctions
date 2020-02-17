@@ -5,7 +5,7 @@ A collection of R functions to clean, export, summarize and plot GLAD questionna
 
 ## How to Install
 
-Requirs the `devtools` package:
+Requires the `devtools` package:
 
 ```r
 devtools::install_github("lyh970817/gladfunctions")
