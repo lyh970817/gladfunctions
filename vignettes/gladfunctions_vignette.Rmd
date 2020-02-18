@@ -119,6 +119,9 @@ tail(colnames(PTSD), 2)
 We can freely `as.numeric` factor variables as they are recoded to class `lfactor`
 from the `lfactor` package, which preserves numeric values.
 
+```{r lib lfactors, results = "markup"}
+library(lfactors)
+```
 For a `Binary` variable:
 
 ```{r lfactor, results = "markup"}
@@ -132,14 +135,17 @@ internal integer representation.
 unique(as.numeric(as.factor(PAD[["pad.anx_future_panic_attacks"]])))
 ```
 
-A simple one liner to convert all `factor` to `numeric`
+A simple function to convert all `factor` to `numeric`
 
 ```{r convert numeric, eval = FALSE}
-PAD_num <- map_df(PAD, ~ if (is.factor(.x)) {
-  as.numeric(.x)
-} else {
-  .x
-})
+as_numeric_fct <- function(x) {
+  if (is.factor(x)) {
+    as.numeric(x)
+  } else {
+    x
+  }
+}
+PAD_num <- as.data.frame(lapply(PAD, as_numeric_fct))
 ```
 
 Or use numeric copies of the factor variables

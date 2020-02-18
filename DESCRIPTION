@@ -26,10 +26,11 @@ Imports:
     ggrepel,
     psych,
     lubridate,
-    car,
-    lfactors
+    car
 RoxygenNote: 7.0.2
 Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Depends: 
+    lfactors
