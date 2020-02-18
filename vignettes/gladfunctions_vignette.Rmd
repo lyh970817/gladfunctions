@@ -31,8 +31,7 @@ options(gargle_oauth_email = TRUE)
 ```
 
 ```{r setup}
-devtools::load_all()
-# library(gladfunctions)
+library(gladfunctions)
 ```
 
 ## Clean Qualtrics exports
@@ -80,7 +79,7 @@ GLAD_clean("CIDID", dat_list)
 sheet <- GLAD_sheet("PAD")
 
 PAD <-
-  readRDS(paste(clean_path, "rds/PAD_Renamed.rds", sep = "/"))
+  readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
 which <- colnames(PAD)[10:15]
 PAD_subset <- GLAD_select(PAD, which, sheet)
 ```
@@ -106,10 +105,11 @@ Please check sheet 'PTSD' on the dictionary sheet for an example.
 Instructions are also available [here](https://github.com/lyh970817/GLAD-Questionnaires/blob/master/documents/instruction_dv.md).
 
 ```{r add derived variables, results = "markup"}
+PTSD <- readRDS(paste(clean_path, "rds_renamed/PTSD_Renamed.rds", sep = "/"))
 sheet2 <- GLAD_sheet("PTSD")
-PTSD <- readRDS(paste(clean_path, "rds_renamed/PTSD_Renamed.rds", sep = "/")) %>%
-  GLAD_derive(sheet2)
-colnames(PTSD) %>% tail(2)
+
+PTSD <- GLAD_derive(PTSD, sheet2)
+tail(colnames(PTSD), 2)
 ```
 
 ## Some special features
