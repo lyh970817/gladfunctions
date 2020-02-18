@@ -25,7 +25,7 @@ ls("package:gladfunctions")
 ```
 
 Or check out the Rmarkdown [vignette](https://htmlpreview.github.io/?https://github.com/lyh970817/gladfunctions/blob/master/vignettes/gladfunctions_vignette.html)
-and the [source code](https://github.com/lyh970817/gladfunctions/blob/master/vignettes/gladfunctions_vignette.Rmdhttps://github.com/lyh970817/gladfunctions/blob/master/vignettes/gladfunctions_vignette.Rmd).
+and the [source code](https://github.com/lyh970817/gladfunctions/blob/master/vignettes/gladfunctions_vignette.Rmd).
 
 Requires raw Qualtrics exports or cleaned data files exported by the functions. 
 
