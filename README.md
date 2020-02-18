@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://github.com/lyh970817/gladfunctions/blob/master/glad_logo.jpg" width="350" class="center">
 </p>
-  
+
 # gladfunctions
 
 A collection of R functions to clean, export, summarise and plot questionnaire data of the GLAD (Genetic Links to Anxiety and Depression) study.
@@ -12,7 +12,7 @@ A collection of R functions to clean, export, summarise and plot questionnaire d
 Requires the `devtools` package:
 
 ```r
-devtools::install_github("lyh970817/gladfunctions", upgrade_dependencies = FALSE)
+devtools::install_github("lyh970817/gladfunctions", upgrade = "never")
 ```
 
 # Overview
@@ -27,7 +27,7 @@ ls("package:gladfunctions")
 Or check out the Rmarkdown [vignette](https://htmlpreview.github.io/?https://github.com/lyh970817/gladfunctions/blob/master/vignettes/gladfunctions_vignette.html)
 and the [source code](https://github.com/lyh970817/gladfunctions/blob/master/vignettes/gladfunctions_vignette.Rmd).
 
-Requires raw Qualtrics exports or cleaned data files exported by the functions. 
+Requires raw Qualtrics exports or cleaned data files exported by the functions.
 
 Please speak to **Henry Rogers** in the **BioResource Office** for a `python` script to prepare Qulatrics exports (extract exports from Qualtrics and remove participant personal information).
 

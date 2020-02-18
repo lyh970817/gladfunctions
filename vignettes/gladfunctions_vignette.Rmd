@@ -152,12 +152,16 @@ as_numeric_fct <- function(x) {
   }
 }
 PAD_num <- as.data.frame(lapply(PAD, as_numeric_fct))
+
+# Or with `purrr` in `tidyverse` to get a tibble
+library(tidyverse)
+PAD_num <- map_df(PAD, as_numeric_fct)
 ```
 
 Or use numeric copies of the factor variables
 
 ```{r numeric factor, results = "markup"}
-grep(".numeric", colnames(PAD), value = T)
+grep("numeric", colnames(PAD), value = T)
 ```
 
 ## Quantile plot
@@ -166,10 +170,10 @@ grep(".numeric", colnames(PAD), value = T)
 GLAD_qplot(data = PAD, var = "pad.frequency_panic_attacks", googlesheet = sheet)
 ```
 
-## Variance tests
+## Variance tests by sex
 
 ```{r, results = "markup"}
-GLAD_vartest(data = PAD, var = "pad.frequency_panic_attacks", googlesheet = sheet)
+GLAD_vartest(data = PAD, var = "pad.frequency_panic_attacks")
 ```
 
 For quantile plot and variance test, I also have a version that extracts
@@ -269,7 +273,7 @@ continuous_plots$densitybysex
 * This plot is for categorical variables that allow multiple options to be
   selected.  Put in one of the variables representing the options.
 
-* Don't seem to have a general way to extract the tile from the
+* Don't seem to have a general way to extract the title from the
   dictionary. Specify the title yourself.
 
 ```{r categorical_plot, fig.width = 10, fig.height = 10}
