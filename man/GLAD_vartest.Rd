@@ -4,7 +4,7 @@
 \alias{GLAD_vartest}
 \title{Runs Variance Tests Between Genders}
 \usage{
-GLAD_vartest(data, var, googlesheet)
+GLAD_vartest(data, var)
 }
 \arguments{
 \item{data}{The dataframe containing the variable to be plotted.}

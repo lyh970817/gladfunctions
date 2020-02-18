@@ -4,13 +4,16 @@
 \alias{GLAD_qplot}
 \title{Generates Quantile Plot for a Continuous Variable}
 \usage{
-GLAD_qplot(data, var)
+GLAD_qplot(data, var, googlesheet)
 }
 \arguments{
 \item{data}{The dataframe containing the variable to be plotted.}
 
 \item{var}{A character string of one element specifying the variable to
 be plotted}
+
+\item{googlesheet}{A dataframe produced by "GLAD_sheet" that contain
+the dictionary sheet of the variables in 'data'.}
 }
 \value{
 A ggplot object.

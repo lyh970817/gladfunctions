@@ -71,6 +71,13 @@ dat_list <- GLAD_read(raw_path)
 GLAD_clean("All", dat_list)
 ```
 
+Do not apply limits to continuous variables, so we could later examine the
+effects of limits with plotting functions.
+
+```{r clean keep limits, eval = FALSE}
+GLAD_clean("All", dat_list, limits = FALSE)
+```
+
 * Clean a specified questionnaire and export to `clean_path`
 
 ```{r clean specified questionnaire, eval = FALSE}
@@ -91,7 +98,7 @@ PAD_subset <- GLAD_select(PAD, which, sheet)
 ## Read in data file and dictionary sheet
 
 * `rds` is a fast loading file format that preserves variable type
-  information that can be read like a csv.
+  information and can be read like a csv.
 
 * I'm reading in the '_Renamed' version with `Easy.name`, but note that all
   the following should also work for the unrenamed version ( with
@@ -156,7 +163,7 @@ grep(".numeric", colnames(PAD), value = T)
 ## Quantile plot
 
 ```{r vartest, results = "markup"}
-GLAD_qplot(data = PAD, var = "pad.frequency_panic_attacks")
+GLAD_qplot(data = PAD, var = "pad.frequency_panic_attacks", googlesheet = sheet)
 ```
 
 ## Variance tests

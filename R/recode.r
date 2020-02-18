@@ -1,42 +1,38 @@
-assert_type <- function(var, type) {
+check_type <- function(var, type) {
   if (length(type) > 1) {
     message(paste(
       var, "has more than one type :",
       paste(type, collapse = ", ")
     ))
-    return(TRUE)
+    return(FALSE)
   }
   if (is.na(type)) {
     message(paste(var, "has no type information."))
     return(TRUE)
   }
-  return(FALSE)
+  return(TRUE)
 }
 
-assert_levels <- function(levels, labels, x, var) {
+check_levels <- function(levels, labels, x, var) {
   # `as.numeric()` converts numeric strings such as "13" to
   # double, but produces a warning and returns NA if it's a
   # character string
   if (any(is.na(levels))) {
     message(paste(var, "has levels missing or has non-numeric levels."))
-    return(TRUE)
-  }
-  # We already add -99 to levels
-  if (length(levels) < 2) {
-    message(paste(var, "has only one level."))
-    return(TRUE)
-  }
-  if (length(unique(levels)) != length(levels)) {
-    message(paste(var, "does not have distinct levels."))
-    return(TRUE)
-  }
-  if (any(is.na(levels))) {
-    message(paste(var, "has NA levels."))
-    return(TRUE)
+    return(FALSE)
   }
   if (any(is.na(labels))) {
     message(paste(var, "has NA labels"))
-    return(TRUE)
+    return(FALSE)
+  }
+  # We already add -99 to levels so there are at least one level
+  if (length(levels) < 2) {
+    message(paste(var, "has only one level."))
+    return(FALSE)
+  }
+  if (length(unique(levels)) != length(levels)) {
+    message(paste(var, "does not have distinct levels."))
+    return(FALSE)
   }
   if (is.numeric(levels)) {
     level_increasing <- min(levels[levels >= 0]):max(levels[levels >= 0])
@@ -60,29 +56,29 @@ assert_levels <- function(levels, labels, x, var) {
       "\nand the levels in data are",
       paste(sort(unique(x)[!is.na(unique(x))]), collapse = ", ")
     ))
-    return(TRUE)
+    return(FALSE)
   }
   if (length(levels) != length(labels)) {
     message(var, " does not have levels and labels of the same length.")
-    return(TRUE)
+    return(FALSE)
   }
-  return(FALSE)
+  return(TRUE)
 }
 
-assert_unit <- function(unit) {
+check_unit <- function(unit, var) {
   if (length(unit) == 0) {
     message(paste(var, "is numeric but has no Unit column."))
-    return(TRUE)
+    return(FALSE)
   }
-  else if (length(unit) > 1) {
+  if (length(unit) > 1) {
     message(paste(var, "has more than one Unit."))
-    return(TRUE)
+    return(FALSE)
   }
-  else if (is.na(unit)) {
+  if (is.na(unit)) {
     message(paste(var, "is numeric but has no Unit."))
-    return(TRUE)
+    return(FALSE)
   }
-  return(FALSE)
+  return(TRUE)
 }
 
 GLAD_recode <- function(x, var, googlesheet, limits) {
@@ -92,7 +88,7 @@ GLAD_recode <- function(x, var, googlesheet, limits) {
     return(x)
   }
   type <- sheet_extract("type", var, googlesheet) %>% unique()
-  if (assert_type(type, var)) {
+  if (!check_type(type, var)) {
     return(x)
   }
   if (type == "Categorical" | type == "Binary") {
@@ -110,24 +106,30 @@ GLAD_recode <- function(x, var, googlesheet, limits) {
     }
 
     # If any level is not appropriate we leave the variable unchanged.
-    if (assert_levels(levels, labels, x, var)) {
+    if (!check_levels(levels, labels, x, var)) {
       return(x)
     }
 
-    x <- tryCatch(expr = {
-      lfactor(x, levels = levels, labels = labels)
-    }, error = function(e) {
-      msg <- paste(
-        "Error occurs at", var,
-        "with levels:",
-        paste(levels, collapse = ", "),
-        "and labels:",
-        paste(labels, collapse = ", ")
-      )
-      stop(msg)
-    })
+    x <- tryCatch(
+      lfactor(x, levels = levels, labels = labels),
+      error = function(e) {
+        if (any(grepl("^[0-9]*$", labels))) {
+          # lfactor does not support labels with numbers unless they are
+          # the same as in levels
+          factor(x, levels = levels, labels = labels)
+        } else {
+          msg <- paste(
+            "Error occurs at", var,
+            "with levels:",
+            paste(levels, collapse = ", "),
+            "and labels:",
+            paste(labels, collapse = ", ")
+          )
+          stop(msg)
+        }
+      }
+    )
   } else if (type == "Numeric/Continuous") {
-
     # The numeric items have text columns in Qualtrics so participants
     # can put it text which causes a warning when using
     # `as.numeric()`. We catch it so the user knows where the error
@@ -138,7 +140,8 @@ GLAD_recode <- function(x, var, googlesheet, limits) {
         return(as.numeric(x))
       }
     )
-    if (limits == FALSE) {
+
+    if (!limits) {
       return(x)
     }
 
@@ -174,7 +177,7 @@ GLAD_recode <- function(x, var, googlesheet, limits) {
 
     # Errors with units do not cause issue with data cleaning, only matters for
     # plotting.
-    if (assert_unit(unit)) {}
+    if (!check_unit(unit, var)) {}
 
     # Some participants enter year as age, compute age for them
     # Need to make sure the these units actually correspond to age

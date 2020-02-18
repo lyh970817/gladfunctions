@@ -12,10 +12,25 @@
 #' @param data The dataframe containing the variable to be plotted.
 #' @param var A character string of one element specifying the variable to
 #' be plotted
+#' @param googlesheet A dataframe produced by "GLAD_sheet" that contain
+#' the dictionary sheet of the variables in 'data'.
 #' @return A ggplot object.
 #' @export
-GLAD_qplot <- function(data, var) {
-  return(ggplot(data, aes_string(sample = var)) + stat_qq())
+GLAD_qplot <- function(data, var, googlesheet) {
+  title <- sheet_extract("title", var, googlesheet)
+  return(
+    ggplot(data, aes_string(sample = var)) +
+      stat_qq() +
+      labs(
+        title = title,
+        subtitle = paste0(
+          "n = ", sum(!is.na(data[[var]])),
+          "; NA = ", sum(is.na(data[[var]])),
+          "; n(total) = ", length(data[[var]])
+        ),
+        color = "black"
+      )
+  )
 }
 
 # GLAD_vartest <- function(data, googlesheet) {
@@ -49,9 +64,8 @@ GLAD_qplot <- function(data, var) {
 #' @param var A character string of one element specifying the variable to
 #' be tested.
 #' @export
-GLAD_vartest <- function(data, var, googlesheet) {
+GLAD_vartest <- function(data, var) {
   formula <- formula(paste(var, "~ Sex"))
-
   print(leveneTest(formula, data))
   print(fligner.test(formula, data))
   print(bartlett.test(formula, data))
