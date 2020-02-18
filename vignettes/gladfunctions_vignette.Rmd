@@ -77,9 +77,9 @@ GLAD_clean("CIDID", dat_list)
 
 ```{r select variables, eval = FALSE}
 sheet <- GLAD_sheet("PAD")
-
 PAD <-
   readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
+
 which <- colnames(PAD)[10:15]
 PAD_subset <- GLAD_select(PAD, which, sheet)
 ```
@@ -112,16 +112,11 @@ PTSD <- GLAD_derive(PTSD, sheet2)
 tail(colnames(PTSD), 2)
 ```
 
-## Some special features
-
-#### `as.numeric` factor variables to run certain models
+### Special feature: `as.numeric` factor variables
 
 We can freely `as.numeric` factor variables as they are recoded to class `lfactor`
 from the `lfactor` package, which preserves numeric values.
 
-```{r lib lfactors, results = "markup"}
-library(lfactors)
-```
 For a `Binary` variable:
 
 ```{r lfactor, results = "markup"}
@@ -135,7 +130,7 @@ internal integer representation.
 unique(as.numeric(as.factor(PAD[["pad.anx_future_panic_attacks"]])))
 ```
 
-A simple function to convert all `factor` to `numeric`
+A simple function to convert all `factor` to `numeric`:
 
 ```{r convert numeric, eval = FALSE}
 as_numeric_fct <- function(x) {
