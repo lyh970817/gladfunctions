@@ -433,7 +433,7 @@ summary {
 <ul>
 <li>Clean all the questionnaire and export to <code>clean_path</code></li>
 </ul>
-<pre class="r"><code>GLAD_cleanall(dat_list)</code></pre>
+<pre class="r"><code>GLAD_clean(&quot;All&quot;, dat_list)</code></pre>
 <ul>
 <li>Clean a specified questionnaire and export to <code>clean_path</code></li>
 </ul>
@@ -487,26 +487,16 @@ tail(colnames(PTSD), 2)
 PAD_num &lt;- as.data.frame(lapply(PAD, as_numeric_fct))</code></pre>
 <p>Or use numeric copies of the factor variables</p>
 <pre class="r"><code>grep(&quot;.numeric&quot;, colnames(PAD), value = T)
-&gt;  [1] &quot;pad.never_numeric&quot;                        
-&gt;  [2] &quot;pad.heart_pounding_numeric&quot;               
-&gt;  [3] &quot;pad.sweating_numeric&quot;                     
-&gt;  [4] &quot;pad.trembling_numeric&quot;                    
-&gt;  [5] &quot;pad.short_of_breath_numeric&quot;              
-&gt;  [6] &quot;pad.choking_numeric&quot;                      
-&gt;  [7] &quot;pad.chest_pain_numeric&quot;                   
-&gt;  [8] &quot;pad.nauseous_numeric&quot;                     
-&gt;  [9] &quot;pad.dizzy_numeric&quot;                        
-&gt; [10] &quot;pad.hot_cold_numeric&quot;                     
-&gt; [11] &quot;pad.numbness_numeric&quot;                     
-&gt; [12] &quot;pad.detached_numeric&quot;                     
-&gt; [13] &quot;pad.lose_control_numeric&quot;                 
-&gt; [14] &quot;pad.going_to_die_numeric&quot;                 
-&gt; [15] &quot;pad.anx_future_panic_attacks_numeric&quot;     
-&gt; [16] &quot;pad.worried_future_panic_attacks_numeric&quot; 
-&gt; [17] &quot;pad.avoid_situation_panic_attacks_numeric&quot;
-&gt; [18] &quot;pad.duration_numeric&quot;                     
-&gt; [19] &quot;pad.physical_cause_numeric&quot;               
-&gt; [20] &quot;pad.heights_numeric&quot;                      
+&gt;  [1] &quot;pad.never_numeric&quot;                         &quot;pad.heart_pounding_numeric&quot;               
+&gt;  [3] &quot;pad.sweating_numeric&quot;                      &quot;pad.trembling_numeric&quot;                    
+&gt;  [5] &quot;pad.short_of_breath_numeric&quot;               &quot;pad.choking_numeric&quot;                      
+&gt;  [7] &quot;pad.chest_pain_numeric&quot;                    &quot;pad.nauseous_numeric&quot;                     
+&gt;  [9] &quot;pad.dizzy_numeric&quot;                         &quot;pad.hot_cold_numeric&quot;                     
+&gt; [11] &quot;pad.numbness_numeric&quot;                      &quot;pad.detached_numeric&quot;                     
+&gt; [13] &quot;pad.lose_control_numeric&quot;                  &quot;pad.going_to_die_numeric&quot;                 
+&gt; [15] &quot;pad.anx_future_panic_attacks_numeric&quot;      &quot;pad.worried_future_panic_attacks_numeric&quot; 
+&gt; [17] &quot;pad.avoid_situation_panic_attacks_numeric&quot; &quot;pad.duration_numeric&quot;                     
+&gt; [19] &quot;pad.physical_cause_numeric&quot;                &quot;pad.heights_numeric&quot;                      
 &gt; [21] &quot;pad.random_numeric&quot;</code></pre>
 </div>
 </div>
@@ -526,15 +516,13 @@ PAD_num &lt;- as.data.frame(lapply(PAD, as_numeric_fct))</code></pre>
 &gt;   Fligner-Killeen test of homogeneity of variances
 &gt; 
 &gt; data:  pad.frequency_panic_attacks by Sex
-&gt; Fligner-Killeen:med chi-squared = 6.4971, df = 1,
-&gt; p-value = 0.0108
+&gt; Fligner-Killeen:med chi-squared = 6.4971, df = 1, p-value = 0.0108
 &gt; 
 &gt; 
 &gt;   Bartlett test of homogeneity of variances
 &gt; 
 &gt; data:  pad.frequency_panic_attacks by Sex
-&gt; Bartlett&#39;s K-squared = 0.00080262, df = 1, p-value =
-&gt; 0.9774</code></pre>
+&gt; Bartlett&#39;s K-squared = 0.00080262, df = 1, p-value = 0.9774</code></pre>
 <p>For quantile plot and variance test, I also have a version that extracts all the continuous variables and loops through them. Would that be more desirable?</p>
 </div>
 <div id="missingness" class="section level2">

@@ -64,7 +64,7 @@ dat_list <- GLAD_read(raw_path)
 * Clean all the questionnaire and export to `clean_path`
 
 ```{r clean all, eval = FALSE}
-GLAD_cleanall(dat_list)
+GLAD_clean("All", dat_list)
 ```
 
 * Clean a specified questionnaire and export to `clean_path`
