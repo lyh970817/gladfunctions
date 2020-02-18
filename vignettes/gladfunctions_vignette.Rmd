@@ -30,6 +30,10 @@ knitr::opts_chunk$set(
 options(gargle_oauth_email = TRUE)
 ```
 
+<p align="center">
+  <img src="../glad_logo.jpg" width="300" class="center">
+</p>
+
 ```{r setup}
 library(gladfunctions)
 ```
