@@ -7,7 +7,7 @@
 #' @return A named list of dataframes each corresponding to a raw data file with
 #' participant personal information removed.
 #' @export
-GLAD_rawall <- function(path) {
+GLAD_read <- function(path) {
   raw_files <- Sys.glob(paste0(path, "*"))
   dat_list <- list()
   dat_names <- c()

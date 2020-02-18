@@ -115,7 +115,7 @@ GLAD_recode <- function(x, var, googlesheet, limits) {
     }
 
     x <- tryCatch(expr = {
-      factor(x, levels = levels, labels = labels)
+      lfactor(x, levels = levels, labels = labels)
     }, error = function(e) {
       msg <- paste(
         "Error occurs at", var,

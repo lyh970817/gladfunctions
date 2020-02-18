@@ -26,7 +26,8 @@ Imports:
     ggrepel,
     psych,
     lubridate,
-    car
+    car,
+    lfactors
 RoxygenNote: 7.0.2
 Suggests:
     knitr,

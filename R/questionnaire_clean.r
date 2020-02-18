@@ -103,14 +103,27 @@ questionnaire_clean <- function(questionnaire, data_raw, limits) {
   )
 }
 
-#' Cleans One Specified Questionnaire
+#' Cleans Questionnaires
 #'
-#' Cleans the specified questionnaire and creates export.
+#' Cleans all questionnaires or one specified questionnaire in 'dat_list'
+#' and creates exports.
 #'
-#' @param questionnaire A questionnaire that is to be cleaned.
-#' @param dat_list A named list of dataframes produced by 'GLAD_rawall'.
+#' The cleaning process removes Qualtrics derived variables, removes
+#' participants with duplicated IDs or without gender information, recodes
+#' `Categorical` and `Binary` variables to class 'lfactor' from the
+#' 'lfactor' package with labels attached and create numeric copies,
+#' applies limits to `Numeric/Continuous` variables and creates four
+#' version of export files: RDS and CSV files with `New.variable` names,
+#' and RDS and CSV files with `Easy.name` names.
+#'
+#' @param questionnaire A character string indicating what questionnaire to
+#' clean by its acronym. The questionnaire data must be in 'dat_list'.If
+#' it's "All", all questionnaires in 'dat_list' are cleaned.
+#' @param dat_list A named list of dataframes produced by 'GLAD_read'.
+#' @param limits A logical indicating whether limits (min and max) are to
+#' be applied
 #' @export
-GLAD_clean <- function(questionnaire, dat_list, limits) {
+GLAD_clean <- function(questionnaire, dat_list, limits = TRUE) {
   # We always need "DEM" to extract "Sex", "Age" and "Birthyear"
   dem <- dat_list[["DEM"]]
   if (questionnaire %in% sign_up) {
@@ -132,18 +145,11 @@ GLAD_clean <- function(questionnaire, dat_list, limits) {
       by = "ExternalReference"
       ) %>%
       questionnaire_clean(questionnaire, ., limits))
+  } else if (questionnaire == "All") {
+    GLAD_cleanall(dat_list, limits)
   }
 }
 
-#' Cleans All Questionnaires In a List
-#'
-#' Cleans all the questionnaires in a list produced by 'GLAD_rawall'
-#' and creates exports.
-#'
-#' @param dat_list A named list of dataframes produced by 'GLAD_rawall'.
-#' @param limits A logical indicating whether limits (min and max) are to
-#' be applied
-#' @export
 GLAD_cleanall <- function(dat_list, limits = TRUE) {
   for (q in questionnaires) {
     GLAD_clean(q, dat_list, limits)

@@ -2,15 +2,30 @@
 % Please edit documentation in R/questionnaire_clean.r
 \name{GLAD_clean}
 \alias{GLAD_clean}
-\title{Cleans One Specified Questionnaire}
+\title{Cleans Questionnaires}
 \usage{
-GLAD_clean(questionnaire, dat_list, limits)
+GLAD_clean(questionnaire, dat_list, limits = TRUE)
 }
 \arguments{
-\item{questionnaire}{A questionnaire that is to be cleaned.}
+\item{questionnaire}{A character string indicating what questionnaire to
+clean by its acronym. The questionnaire data must be in 'dat_list'.If
+it's "All", all questionnaires in 'dat_list' are cleaned.}
 
-\item{dat_list}{A named list of dataframes produced by 'GLAD_rawall'.}
+\item{dat_list}{A named list of dataframes produced by 'GLAD_read'.}
+
+\item{limits}{A logical indicating whether limits (min and max) are to
+be applied}
 }
 \description{
-Cleans the specified questionnaire and creates export.
+Cleans all questionnaires or one specified questionnaire in 'dat_list'
+and creates exports.
+}
+\details{
+The cleaning process removes Qualtrics derived variables, removes
+participants with duplicated IDs or without gender information, recodes
+`Categorical` and `Binary` variables to class 'lfactor' from the
+'lfactor' package with labels attached and create numeric copies,
+applies limits to `Numeric/Continuous` variables and creates four
+version of export files: RDS and CSV files with `New.variable` names,
+and RDS and CSV files with `Easy.name` names.
 }

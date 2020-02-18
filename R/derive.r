@@ -6,6 +6,9 @@ get_keys <- function(items, googlesheet) {
 }
 
 get_score <- function(keys, data) {
+  # We can freely `as.numeric` columns here as all the factor variables are
+  # of `lfactor` class, which allows `as.numeric`
+  data <- map_df(data, as.numeric)
   scores <- scoreItems(
     keys = keys,
     items = data,

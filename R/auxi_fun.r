@@ -2,7 +2,7 @@
 #' @import ggplot2
 #' @import knitr
 #' @importFrom kableExtra kable_styling scroll_box
-#' @importFrom purrr map_chr map2_df map_dbl imap_dfc map_lgl map2_lgl
+#' @importFrom purrr map_chr map_df map2_df map_dbl imap_dfc map_lgl map2_lgl
 #' @importFrom dplyr select group_by filter bind_cols count rename mutate
 #' left_join nth everything contains summarise
 #' @importFrom stringr str_extract str_split
@@ -15,6 +15,7 @@
 #' @importFrom googlesheets4 read_sheet sheets_sheets
 #' @importFrom summarytools descr tb freq
 #' @import ggformula
+#' @import lfactors
 
 sheet_extract <- function(col, var, googlesheet) {
   # Extract values for a specified variable from a specified column

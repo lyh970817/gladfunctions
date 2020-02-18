@@ -31,7 +31,8 @@ options(gargle_oauth_email = TRUE)
 ```
 
 ```{r setup}
-library(gladfunctions)
+devtools::load_all()
+# library(gladfunctions)
 ```
 
 ## Clean Qualtrics exports
@@ -58,7 +59,7 @@ clean_path <- "../../../../Research/Data/GLAD/GLAD-Questionnaires-Cleaning/data_
 * Read in data file as a list from `raw_path`
 
 ```{r read data, eval = FALSE}
-dat_list <- GLAD_rawall(raw_path)
+dat_list <- GLAD_read(raw_path)
 ```
 
 * Clean all the questionnaire and export to `clean_path`
@@ -101,25 +102,61 @@ sheet <- GLAD_sheet("PAD")
 
 ## Add derived variables to data
 
-```{r add derived variables}
-PAD <- GLAD_derive(PAD, sheet)
+Please check sheet 'PTSD' on the dictionary sheet for an example.
+Instructions are also available [here](https://github.com/lyh970817/GLAD-Questionnaires/blob/master/documents/instruction_dv.md).
+
+```{r add derived variables, results = "markup"}
+sheet2 <- GLAD_sheet("PTSD")
+PTSD <- readRDS(paste(clean_path, "rds_renamed/PTSD_Renamed.rds", sep = "/")) %>%
+  GLAD_derive(sheet2)
+colnames(PTSD) %>% tail(2)
 ```
 
-## Quantile Plot
+## Some special features
+
+#### `as.numeric` factor variables to run certain models
+
+We can freely `as.numeric` factor variables as they are recoded to class `lfactor`
+from the `lfactor` package, which preserves numeric values.
+
+For a `Binary` variable:
+
+```{r lfactor, results = "markup"}
+unique(as.numeric(PAD[["pad.anx_future_panic_attacks"]]))
+```
+
+Applying `as.numeric` to the R built-in class `factor` only obtains its
+internal integer representation.
+
+```{r factor, results = "markup"}
+unique(as.numeric(as.factor(PAD[["pad.anx_future_panic_attacks"]])))
+```
+
+A simple one liner to convert all `factor` to `numeric`
+
+```{r convert numeric, eval = FALSE}
+PAD_num <- map_df(PAD, ~ if (is.factor(.x)) {
+  as.numeric(.x)
+} else {
+  .x
+})
+```
+
+Or use numeric copies of the factor variables
+
+```{r numeric factor, results = "markup"}
+grep(".numeric", colnames(PAD), value = T)
+```
+
+## Quantile plot
 
 ```{r vartest, results = "markup"}
 GLAD_qplot(data = PAD, var = "pad.frequency_panic_attacks")
 ```
 
-## Variance Tests
+## Variance tests
 
 ```{r, results = "markup"}
-# Note the use of `resuls = "mark up"` here. I am overwriting
-# `results = "asis"` at the start of the script.
-# "asis" writes text outputs from `summarytools` and
-# `kable` to markdown format (so that they display nicely). Here we just
-# need the output of these tests remain as plain text.
-
 GLAD_vartest(data = PAD, var = "pad.frequency_panic_attacks", googlesheet = sheet)
 ```
 
@@ -220,7 +257,7 @@ continuous_plots$densitybysex
 * This plot is for categorical variables that allow multiple options to be
   selected.  Put in one of the variables representing the options.
 
-* Don't seem to have a generalized way to extract the tile from the
+* Don't seem to have a general way to extract the tile from the
   dictionary. Specify the title yourself.
 
 ```{r categorical_plot, fig.width = 10, fig.height = 10}
