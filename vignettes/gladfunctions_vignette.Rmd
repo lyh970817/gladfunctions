@@ -134,7 +134,7 @@ For a `Binary` variable:
 unique(as.numeric(PAD[["pad.anx_future_panic_attacks"]]))
 ```
 
-Applying `as.numeric` to the R built-in class `factor` only obtains its
+Applying `as.numeric` to the R built-in class `factor` only returns its
 internal integer representation.
 
 ```{r factor, results = "markup"}
@@ -162,55 +162,6 @@ Or use numeric copies of the factor variables
 
 ```{r numeric factor, results = "markup"}
 grep("numeric", colnames(PAD), value = T)
-```
-
-## Quantile plot
-
-```{r vartest, results = "markup"}
-GLAD_qplot(data = PAD, var = "pad.frequency_panic_attacks", googlesheet = sheet)
-```
-
-## Variance tests by sex
-
-```{r, results = "markup"}
-GLAD_vartest(data = PAD, var = "pad.frequency_panic_attacks")
-```
-
-For quantile plot and variance test, I also have a version that extracts
-all the continuous variables and loops through them.  Would that be more
-desirable?
-
-## Missingness
-
-* The `GLAD_missng` function returns a named list of various missingness summaries and plots.
-
-```{r missingness}
-missingness <- GLAD_missing(data = PAD)
- ```
-
-* Percentage of participants with no variable missing.
-
-```{r missingness percent, results = "markup"}
-missingness$percent
- ```
-
-```{r missingness descr}
-missingness$descr
-```
-
-```{r missingness freq}
-missingness$freq
-```
-
-A value of '1' for a variable in the left most column indicates which
-missing percentage it has.
-
-```{r missingness table}
-print(missingness$table)
-```
-
-```{r missingness plot, fig.width = 10, fig.height = 10}
-missingness$plot
 ```
 
 ## Plots
@@ -284,3 +235,53 @@ GLAD_plot(
   googlesheet = sheet
 )
 ```
+
+## Quantile plot
+
+```{r vartest, results = "markup"}
+GLAD_qplot(data = PAD, var = "pad.frequency_panic_attacks", googlesheet = sheet)
+```
+
+## Variance tests by sex
+
+```{r, results = "markup"}
+GLAD_vartest(data = PAD, var = "pad.frequency_panic_attacks")
+```
+
+For quantile plot and variance test, I also have a version that extracts
+all the continuous variables and loops through them.  Would that be more
+desirable?
+
+## Missingness
+
+* The `GLAD_missng` function returns a named list of various missingness summaries and plots.
+
+```{r missingness}
+missingness <- GLAD_missing(data = PAD)
+ ```
+
+* Percentage of participants with no variable missing.
+
+```{r missingness percent, results = "markup"}
+missingness$percent
+ ```
+
+```{r missingness descr}
+missingness$descr
+```
+
+```{r missingness freq}
+missingness$freq
+```
+
+A value of '1' for a variable in the left most column indicates which
+missing percentage it has.
+
+```{r missingness table}
+print(missingness$table)
+```
+
+```{r missingness plot, fig.width = 10, fig.height = 10}
+missingness$plot
+```
+
