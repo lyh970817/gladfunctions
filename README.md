@@ -12,7 +12,7 @@ A collection of R functions to clean, export, summarise and plot questionnaire d
 Requires the `devtools` package:
 
 ```r
-devtools::install_github("lyh970817/gladfunctions", upgrade = "never")
+devtools::install_github("lyh970817/gladfunctions")
 ```
 
 # Overview
