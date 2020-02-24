@@ -31,6 +31,14 @@ Requires raw Qualtrics exports or cleaned data files exported by the functions.
 
 Please speak to **Henry Rogers** in the **BioResource Office** for a `python` script to prepare Qulatrics exports (extract exports from Qualtrics and remove participant personal information).
 
+# Upcoming 
+
+* Gender difference plots for all the continuous variables
+
+* 'feather' format file exports
+
+* Vectorized `GLAD_sheet` function
+
 # Issues
 
 Please open an issue on this GitHub page to report bugs and suggest changes.
