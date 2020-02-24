@@ -16,7 +16,7 @@ get_score <- function(keys, data) {
   )
   # `scoreItems` also computes scores for participants with missing items.
   # We will discard these score.
-  scores[scores$missing > 0] <- NA
+  scores[["scores"]][scores$missing > 0] <- NA
   return(scores[["scores"]][, 1])
 }
 
@@ -33,34 +33,33 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
     is_newvar <- FALSE
   }
   vars <- googlesheet[["easyname"]]
+  formulae <- googlesheet[["formula"]]
 
   if (!"score_key" %in% colnames(googlesheet)) {
     # message(paste(questionnaire, "has no Score.key."))
     return(data)
   }
-  rawkeys_pos <- which(!is.na(googlesheet[["score_key"]]))
+  keys_pos <- which(!is.na(googlesheet[["score_key"]]))
 
-  if (length(rawkeys_pos) == 0) {
+  if (length(keys_pos) == 0) {
     message(paste(questionnaire, "has no Score.key."))
     return(data)
   }
 
-  items <- googlesheet[["easyname"]][rawkeys_pos] %>% unique()
+  items <- vars[keys_pos] %>% unique()
   data_items <- data[items]
 
   all_keys <- get_keys(items, googlesheet)
   if (length(all_keys) >= 1) {
-    if (!any(googlesheet[["formula"]] == questionnaire, na.rm = T)) {
+    if (!any(formulae == questionnaire, na.rm = T)) {
       stop(questionnaire, " has no total score formula.")
     }
-    total_score_name <- vars[which(googlesheet[["formula"]] == questionnaire)]
+    total_score_name <- vars[which(formulae == questionnaire)]
     data[total_score_name] <-
       get_score(all_keys, data_items)
   }
 
-  subscales <- googlesheet[["formula"]] %>%
-    .[!is.na(googlesheet[["subscale"]])] %>%
-    unique() %>%
+  subscales <- unique(googlesheet[["subscale"]]) %>%
     .[!is.na(.)]
 
   if (length(subscales > 1)) {
@@ -71,7 +70,7 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
       data_subitems <- data_items[sub_items]
 
       sub_keys <- get_keys(sub_items, googlesheet)
-      sub_score_name <- vars[googlesheet[["formula"]] == questionnaire]
+      sub_score_name <- vars[which(googlesheet[["formula"]] == subscale)]
       data[sub_score_name] <-
         get_score(sub_keys, data_subitems)
     }
@@ -101,11 +100,12 @@ GLAD_formula <- function(data, googlesheet, questionnaire) {
   }
 
   vars <- googlesheet[["easyname"]]
-  derive_lgl <- grepl("Derived.variable", googlesheet[["Comments"]]) &
-    googlesheet[["formula"]] != questionnaire
 
-  derive_vars <- vars[derive_lgl] %>%
-    .[!. %in% unique(googlesheet[["subscale"]])]
+  derive_where <- grepl("Derived.variable", googlesheet[["Comments"]]) &
+    googlesheet[["formula"]] != questionnaire &
+    !googlesheet[["formula"]] %in% unique(googlesheet[["subscale"]])
+
+  derive_vars <- vars[derive_where]
 
   for (dv in derive_vars) {
     formula <- sheet_extract("formula", dv, googlesheet) %>%
@@ -140,7 +140,9 @@ GLAD_derive <- function(data, googlesheet) {
     "\\."
   ) %>%
     map_chr(nth, 1) %>%
-    unique()
+    unique() %>%
+    .[!is.na(.)]
+
 
   data <- data %>%
     GLAD_score(googlesheet, questionnaire = questionnaire) %>%
