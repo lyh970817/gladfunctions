@@ -112,15 +112,21 @@ sheet <- GLAD_sheet("PAD")
 
 ## Add derived variables to data
 
-Please check sheet 'PTSD' on the dictionary sheet for an example.
+Please check sheet 'PTSD' on the dictionary sheet for a simple example and "AGP" for a more complicated one.
 Instructions are also available [here](https://github.com/lyh970817/GLAD-Questionnaires/blob/master/documents/instruction_dv.md).
 
 ```{r add derived variables, results = "markup"}
 PTSD <- readRDS(paste(clean_path, "rds_renamed/PTSD_Renamed.rds", sep = "/"))
 sheet2 <- GLAD_sheet("PTSD")
 
+AGP <- readRDS(paste(clean_path, "rds_renamed/AGP_Renamed.rds", sep = "/"))
+sheet3 <- GLAD_sheet("AGP")
+
 PTSD <- GLAD_derive(PTSD, sheet2)
+AGP <- GLAD_derive(AGP, sheet3)
+
 tail(colnames(PTSD), 2)
+tail(colnames(AGP), 4)
 ```
 
 ### Special feature: `as.numeric` factor variables
