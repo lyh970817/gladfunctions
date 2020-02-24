@@ -35,7 +35,7 @@ Please speak to **Henry Rogers** in the **BioResource Office** for a `python` sc
 
 * Gender difference plots for all the continuous variables
 
-* 'feather' format file exports
+* `feather` format file exports
 
 * Vectorized `GLAD_sheet` function
 
