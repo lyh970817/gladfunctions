@@ -129,6 +129,12 @@ tail(colnames(PTSD), 2)
 tail(colnames(AGP), 4)
 ```
 
+## Get variable descriptions
+
+```{r get description, results = "markup"}
+GLAD_getdescr(colnames(PAD)[5:8], sheet)
+```
+
 ### Special feature: `as.numeric` factor variables
 
 We can freely `as.numeric` factor variables as they are recoded to class `lfactor`
@@ -151,12 +157,9 @@ A simple function to convert all `factor` to `numeric`:
 
 ```{r convert numeric, eval = FALSE}
 as_numeric_fct <- function(x) {
-  if (is.factor(x)) {
-    as.numeric(x)
-  } else {
-    x
-  }
+  if (is.factor(x)) as.numeric(x) else x
 }
+
 PAD_num <- as.data.frame(lapply(PAD, as_numeric_fct))
 
 # Or with `purrr` in `tidyverse` to get a tibble

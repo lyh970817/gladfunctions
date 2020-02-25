@@ -182,12 +182,12 @@ GLAD_recode <- function(x, var, googlesheet, limits) {
     # Some participants enter year as age, compute age for them
     # Need to make sure the these units actually correspond to age
     # variable.
-    else if (grepl("[Aa]ge|[Yy]ears", unit)) {
-      # message(paste(var, "is age"))
-      # If age need logic we can identify the variables with this.
-      # x[which(x > 1900 & x < year(Sys.Date()))] <-
-      #   year(Sys.Date()) - x[which(x > 1900 & x < year(Sys.Date()))]
-    }
+    # else if (grepl("[Aa]ge|[Yy]ears", unit)) {
+    # message(paste(var, "is age"))
+    # If age need logic we can identify the variables with this.
+    # x[which(x > 1900 & x < year(Sys.Date()))] <-
+    #   year(Sys.Date()) - x[which(x > 1900 & x < year(Sys.Date()))]
+    # }
     x[which(x < min | x > max)] <- NA
   }
   return(x)
