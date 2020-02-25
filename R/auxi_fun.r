@@ -14,6 +14,7 @@
 #' @importFrom readr write_csv read_csv
 #' @importFrom googlesheets4 read_sheet sheets_sheets
 #' @importFrom summarytools descr tb freq
+#' @importFrom feather write_feather
 #' @import ggformula
 #' @import lfactors
 
@@ -93,4 +94,62 @@ GLAD_select <- function(data, which, googlesheet) {
       data[colnames(data) %in% items_all]
     ))
   }
+}
+
+get_questionnaire <- function(googlesheet) {
+  # Get the name of the questionnaire
+  questionnaire <- str_split(
+    googlesheet[["newvar"]],
+    "\\."
+  ) %>%
+    map_chr(nth, 1) %>%
+    unique() %>%
+    .[!is.na(.)]
+  return(questionnaire)
+}
+
+#' Exports Selected Variables From a Data Set
+#'
+#' Exports selected variables from a data set by specifying their names.
+#'
+#' @param data The dataframe containing the variables to be exported,
+#' outputted by 'GLAD_clean' or 'GLAD_cleanall'.
+#' @param which An character vector indicating the items to be export.
+#' @param googlesheet A dataframe created by 'GLAD_sheet' that contains
+#' corresponding dictionary information for 'data'.
+#' @export
+GLAD_select <- function(data, which, googlesheet) {
+  if (any(colnames(data) %in% googlesheet[["newvar"]])) {
+    items <- googlesheet[["newvar"]][googlesheet[["easyname"]] %in% which]
+    items_num <- paste(items, "numeric", sep = ".")
+    items_all <- c(items, items_num)
+    return(bind_cols(
+      data[c("ID", "Sex", "Age", "Birthyear")],
+      data[colnames(data) %in% items_all]
+    ))
+  }
+  if (any(colnames(data) %in% googlesheet[["easyname"]])) {
+    items_num <- paste(which, "numeric", sep = ".")
+    items_all <- c(which, items_num)
+    return(bind_cols(
+      data[c("ID", "Sex", "Age", "Birthyear")],
+      data[colnames(data) %in% items_all]
+    ))
+  }
+}
+
+#' Get Descripton (Title) for Selected Variables
+#'
+#' Get Descripton (Title) for Selected Variables by specifying their names.
+#'
+#' @param which An character vector indicating the items.
+#' @param googlesheet A dataframe created by 'GLAD_sheet' that contains
+#' corresponding dictionary information for 'data'.
+#' @return A named vector with names being the `Easy.name` or
+#' `New.variable` and values being their descriptions.
+#' @export
+GLAD_getdescr <- function(which, googlesheet) {
+  descrs <- vector()
+  for (var in which) descrs[var] <- sheet_extract("title", var, googlesheet)
+  return(descrs)
 }

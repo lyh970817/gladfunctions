@@ -74,12 +74,7 @@ GLAD_rename <- function(data, googlesheet, from = "oldvar", to = "newvar") {
     unique() %>%
     setNames(oldnames)
 
-
-  # Get the name of the questionnaire. This is to be changed. Check
-  # variable scoping. Why can't find `questionnaire`?
-
-  dat_name <- str_split(colnames(data)[5], "\\.") %>%
-    map_chr(nth, 1)
+  questionnaire <- get_questionnaire(googlesheet)
 
   nonames <-
     oldvar[is.na(newvar) & !grepl(
@@ -90,7 +85,7 @@ GLAD_rename <- function(data, googlesheet, from = "oldvar", to = "newvar") {
 
   if (length(nonames) > 0) {
     message(paste(
-      dat_name, "has", from, "names that do not have", to, "names:",
+      questionnaire, "has", from, "names that do not have", to, "names:",
       paste(nonames, collapse = ", ")
     ))
   }

@@ -15,22 +15,21 @@ Imports:
     dplyr,
     readr,
     googlesheets4,
+    purrr,
+    stringr,
+    magrittr,
     tidyr,
     ggplot2,
-    purrr,
-    tibble,
-    stringr,
     summarytools,
     kableExtra,
     ggformula,
     ggrepel,
     psych,
-    lubridate,
     car
 RoxygenNote: 7.0.2
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
 VignetteBuilder: knitr
-Depends: 
+Depends:
     lfactors

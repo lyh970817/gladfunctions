@@ -21,17 +21,16 @@ get_score <- function(keys, data) {
 }
 
 GLAD_score <- function(data, googlesheet, questionnaire) {
-  if (any(colnames(data) %in% googlesheet[["newvar"]])) {
+  is_newvar <- any(colnames(data) %in% googlesheet[["newvar"]])
+  if (is_newvar) {
     # The formulae are in Easy.name, so if the data frame has New.variable
     # names it should be renamed first.
-    is_newvar <- TRUE
     data <- GLAD_rename(data, googlesheet,
       from = "newvar",
       to = "easyname"
     )
-  } else if (any(colnames(data) %in% googlesheet[["easyname"]])) {
-    is_newvar <- FALSE
   }
+
   vars <- googlesheet[["easyname"]]
   formulae <- googlesheet[["formula"]]
 
@@ -48,8 +47,8 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
 
   items <- vars[keys_pos] %>% unique()
   data_items <- data[items]
-
   all_keys <- get_keys(items, googlesheet)
+
   if (length(all_keys) >= 1) {
     if (!any(formulae == questionnaire, na.rm = T)) {
       stop(questionnaire, " has no total score formula.")
@@ -68,15 +67,12 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
         vars[which(googlesheet[["subscale"]] == subscale)] %>%
         unique()
       data_subitems <- data_items[sub_items]
-
       sub_keys <- get_keys(sub_items, googlesheet)
       sub_score_name <- vars[which(googlesheet[["formula"]] == subscale)]
       data[sub_score_name] <-
         get_score(sub_keys, data_subitems)
     }
   }
-  # If we've done the renaming, rename it back.
-  # browser()
   if (is_newvar) {
     data <- GLAD_rename(data, googlesheet,
       from = "easyname",
@@ -87,18 +83,15 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
 }
 
 GLAD_formula <- function(data, googlesheet, questionnaire) {
-  if (any(colnames(data) %in% googlesheet[["newvar"]])) {
+  is_newvar <- any(colnames(data) %in% googlesheet[["newvar"]])
+  if (is_newvar) {
     # The formulae are in Easy.name, so if the data frame has New.variable
     # names it should be renamed first.
-    is_newvar <- TRUE
     data <- GLAD_rename(data, googlesheet,
       from = "newvar",
       to = "easyname"
     )
-  } else if (any(colnames(data) %in% googlesheet[["easyname"]])) {
-    is_newvar <- FALSE
   }
-
   vars <- googlesheet[["easyname"]]
 
   derive_where <- grepl("Derived.variable", googlesheet[["Comments"]]) &
@@ -135,18 +128,9 @@ GLAD_formula <- function(data, googlesheet, questionnaire) {
 #' @export
 GLAD_derive <- function(data, googlesheet) {
   # Get the name of the questionnaire
-  questionnaire <- str_split(
-    googlesheet[["newvar"]],
-    "\\."
-  ) %>%
-    map_chr(nth, 1) %>%
-    unique() %>%
-    .[!is.na(.)]
-
-
+  questionnaire <- get_questionnaire(googlesheet)
   data <- data %>%
     GLAD_score(googlesheet, questionnaire = questionnaire) %>%
     GLAD_formula(googlesheet, questionnaire = questionnaire)
-
   return(data)
 }

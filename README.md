@@ -15,6 +15,12 @@ Requires the `devtools` package:
 devtools::install_github("lyh970817/gladfunctions")
 ```
 
+# New
+
+* `GLAD_getdescr` to get descriptions for variables (without needing to look at the dictionary manually).
+
+* `feather` format exports.
+
 # Overview
 
 To see the full list of exported functions:
@@ -35,10 +41,8 @@ Please speak to **Henry Rogers** in the **BioResource Office** for a `python` sc
 
 Please open an issue on this GitHub page to report bugs and suggest changes.
 
-# Upcoming 
+# Upcoming
 
 * Gender difference plots for all the continuous variables
-
-* `feather` format file exports
 
 * Vectorized `GLAD_sheet` function

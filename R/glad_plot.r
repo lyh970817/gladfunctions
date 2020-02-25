@@ -34,12 +34,15 @@ GLAD_plot <- function(data, var, title = "", include_outlier = TRUE, binwidth = 
     plots[["densitybysex"]] <- density_plot_all(data, var, googlesheet, bysex = TRUE, include_outlier, binwidth)
     return(plots)
   }
-  if (type == "Binary" | type == "Categorical") {
+  else if (type == "Binary" | type == "Categorical") {
     if (length(catevars) == 1) {
       return(factor_plot(data, var, googlesheet))
     }
     if (length(catevars) > 1) {
       return(categorical_plot(data, var, title = title, googlesheet))
     }
+  }
+  else {
+    stop(var, " does not have valid type.")
   }
 }
