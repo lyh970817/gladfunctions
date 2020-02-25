@@ -8,7 +8,11 @@ check_type <- function(var, type) {
   }
   if (is.na(type)) {
     message(paste(var, "has no type information."))
-    return(TRUE)
+    return(FALSE)
+  }
+  if (!type %in% c("Categorical", "Binary", "Numeric/Continuous")) {
+    message(paste(var, "has no valid type:", type))
+    return(FALSE)
   }
   return(TRUE)
 }
@@ -88,7 +92,7 @@ GLAD_recode <- function(x, var, googlesheet, limits) {
     return(x)
   }
   type <- sheet_extract("type", var, googlesheet) %>% unique()
-  if (!check_type(type, var)) {
+  if (!check_type(var, type)) {
     return(x)
   }
   if (type == "Categorical" | type == "Binary") {

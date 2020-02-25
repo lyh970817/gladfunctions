@@ -36,7 +36,7 @@ GLAD_removehead <- function(data, googlesheet) {
 }
 
 questionnaire_clean <- function(questionnaire, data_raw, limits) {
-  sheet <- GLAD_sheet(questionnaire)
+  sheet <- GLAD_sheet(questionnaire)[[1]]
 
   # "oldvar" are variables names Qualtrics raw files have.
   # They correponds to column names of a data set.
