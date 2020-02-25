@@ -17,9 +17,11 @@ devtools::install_github("lyh970817/gladfunctions")
 
 # New
 
-* `GLAD_getdescr` to get descriptions for variables (without needing to look at the dictionary manually).
+* `GLAD_getdescr` to get descriptions for variables (without needing to look at the dictionary manually)
 
-* `feather` format exports.
+* `feather` format exports
+
+* Vectorized `GLAD_sheet` function
 
 # Overview
 
@@ -45,4 +47,3 @@ Please open an issue on this GitHub page to report bugs and suggest changes.
 
 * Gender difference plots for all the continuous variables
 
-* Vectorized `GLAD_sheet` function
