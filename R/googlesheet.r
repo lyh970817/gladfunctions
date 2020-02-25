@@ -1,14 +1,7 @@
 GLAD_url <- "https://docs.google.com/spreadsheets/d/1X9LfgPpBsS2zzVSwkncX8aP5YWuEH9PdW11KRDRcZ38/edit#gid=1962975491"
 
-#' Read in The Dictionary Sheet
-#'
-#' Read in the googlesheet dictionary sheet for a specified questionnaire
-#'
-#' @param questionnaire The acronym of the questionnaire as one of the
-#' sheet names in the GLAD dictionary googleshet.
-#' @return A dataframe containing information of the dictionary sheet.
-#' @export
-GLAD_sheet <- function(questionnaire) {
+GLAD_sheet_scal <- function(questionnaire) {
+  # Scalar version
   googlesheet <- read_sheet(GLAD_url,
     sheet = questionnaire,
     col_types = "c", skip = 1
@@ -57,6 +50,16 @@ GLAD_sheet <- function(questionnaire) {
     })
   return(googlesheet)
 }
+
+#' Read in The Dictionary Sheet
+#'
+#' Read in the googlesheet dictionary sheet for a specified questionnaire
+#'
+#' @param questionnaire The acronym of the questionnaire as one of the
+#' sheet names in the GLAD dictionary googleshet.
+#' @return A dataframe containing information of the dictionary sheet.
+#' @export
+GLAD_sheet <- Vectorize(GLAD_sheet_scal, SIMPLIFY = FALSE)
 
 GLAD_sheetnames <- function(url = GLAD_url) {
   GLAD_sheetnames <- sheets_sheets(url) %>%

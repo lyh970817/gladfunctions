@@ -138,6 +138,11 @@ GLAD_select <- function(data, which, googlesheet) {
   }
 }
 
+GLAD_getdescr_scal <- function(which, googlesheet) {
+  # scalar version
+  return(sheet_extract("title", which, googlesheet))
+}
+
 #' Get Descripton (Title) for Selected Variables
 #'
 #' Get Descripton (Title) for Selected Variables by specifying their names.
@@ -148,8 +153,11 @@ GLAD_select <- function(data, which, googlesheet) {
 #' @return A named vector with names being the `Easy.name` or
 #' `New.variable` and values being their descriptions.
 #' @export
-GLAD_getdescr <- function(which, googlesheet) {
-  descrs <- vector()
-  for (var in which) descrs[var] <- sheet_extract("title", var, googlesheet)
-  return(descrs)
-}
+GLAD_getdescr <- Vectorize(GLAD_getdescr_scal, vectorize.args = "which")
+
+
+# GLAD_getdescr <- function(which, googlesheet) {
+#   descrs <- vector()
+#   for (var in which) descrs[var] <- sheet_extract("title", var, googlesheet)
+#   return(descrs)
+# }
