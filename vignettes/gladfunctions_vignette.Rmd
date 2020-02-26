@@ -87,7 +87,10 @@ GLAD_clean("CIDID", dat_list)
 * Select variables to export with `Easy.name`
 
 ```{r select variables, eval = FALSE}
-sheet <- GLAD_sheet("PAD")
+# Take the first element of the sheet list - `GLAD_sheet` is a vectorized
+# function.
+
+sheet <- GLAD_sheet("PAD")[[1]]
 PAD <-
   readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
 
@@ -107,7 +110,7 @@ PAD_subset <- GLAD_select(PAD, which, sheet)
 ```{r read in data files}
 PAD <-
   readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
-sheet <- GLAD_sheet("PAD")
+sheet <- GLAD_sheet("PAD")[[1]]
 ```
 
 ## Add derived variables to data
@@ -117,10 +120,10 @@ Instructions are also available [here](https://github.com/lyh970817/GLAD-Questio
 
 ```{r add derived variables, results = "markup"}
 PTSD <- readRDS(paste(clean_path, "rds_renamed/PTSD_Renamed.rds", sep = "/"))
-sheet2 <- GLAD_sheet("PTSD")
+sheet2 <- GLAD_sheet("PTSD")[[1]]
 
 AGP <- readRDS(paste(clean_path, "rds_renamed/AGP_Renamed.rds", sep = "/"))
-sheet3 <- GLAD_sheet("AGP")
+sheet3 <- GLAD_sheet("AGP")[[1]]
 
 PTSD <- GLAD_derive(PTSD, sheet2)
 AGP <- GLAD_derive(AGP, sheet3)
