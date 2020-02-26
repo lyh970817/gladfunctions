@@ -23,6 +23,8 @@ devtools::install_github("lyh970817/gladfunctions")
 
 * Vectorized `GLAD_sheet` function
 
+* A more complicated derived variable example on AGP
+
 # Overview
 
 To see the full list of exported functions:

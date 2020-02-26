@@ -11,7 +11,9 @@ check_type <- function(var, type) {
     return(FALSE)
   }
   if (!type %in% c("Categorical", "Binary", "Numeric/Continuous")) {
-    message(paste(var, "has no valid type:", type))
+    if (!grepl("txt", var)) {
+      message(paste(var, "has no valid type:", type))
+    }
     return(FALSE)
   }
   return(TRUE)
