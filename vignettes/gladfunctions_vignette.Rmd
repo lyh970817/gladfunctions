@@ -76,13 +76,13 @@ Do not apply limits to continuous variables, so we could later examine the
 effects of limits with plotting functions.
 
 ```{r clean keep limits, eval = FALSE}
-GLAD_clean("All", dat_list, limits = FALSE)
+GLAD_clean("All", dat_list, clean_path, limits = FALSE)
 ```
 
 * Clean a specified questionnaire and export to `clean_path`
 
 ```{r clean specified questionnaire, eval = FALSE}
-GLAD_clean("CIDID", dat_list)
+GLAD_clean("CIDID", dat_list, clean_path)
 ```
 
 * Select variables to export with `Easy.name`
@@ -199,10 +199,11 @@ GLAD_plot(
 * With variables of `Numeric/Continuous` type, multiple plot objects are
   returned in a named list.
 
-* Note that for these variables, it is possible to suuply a logical
+* Note that for these variables, it is possible to supply a logical
   argument `include_outlier`. For variables that don't have maximum or
   minimum in the dictionary hence haven't been cleaned, this is useful for
-  deciding cut-offs.
+  deciding cut-offs. When `include_outlier` is set to `FALSE`, it's also
+  possible to specify your own limits for plots through the `limit` argument.
 
 * Set `binwidth = "FD"` to apply the Freedman-Diaconis rule for deciding
   optimal binwidth. The default is '1' and should be suitable for most
