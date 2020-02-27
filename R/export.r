@@ -1,3 +1,4 @@
+# To be put in GLAD_recode_df
 add_numeric <- function(data_cleaned, data_raw) {
   # Add numeric version variables for factor varaibles.
 
@@ -30,14 +31,15 @@ to_csv <- function(data_cleaned, data_raw) {
 }
 
 GLAD_export <- function(data_cleaned, data_raw, questionnaire, dirpath, googlesheet, rename = FALSE) {
-  data_cleaned_csv <- to_csv(data_cleaned, data_raw)
-
   dir.create(file.path(dirpath, "csv_renamed"), showWarnings = FALSE)
   dir.create(file.path(dirpath, "csv"), showWarnings = FALSE)
   dir.create(file.path(dirpath, "rds_renamed"), showWarnings = FALSE)
   dir.create(file.path(dirpath, "rds"), showWarnings = FALSE)
   dir.create(file.path(dirpath, "feather_renamed"), showWarnings = FALSE)
   dir.create(file.path(dirpath, "feather"), showWarnings = FALSE)
+
+  data_cleaned_csv <- to_csv(data_cleaned, data_raw)
+  data_cleaned_bin <- add_numeric(data_cleaned, data_raw)
 
   if (rename == TRUE) {
     questionnaire <- paste0(questionnaire, "_Renamed")
@@ -52,32 +54,30 @@ GLAD_export <- function(data_cleaned, data_raw, questionnaire, dirpath, googlesh
     csv_path <- paste0(dirpath, csv_name)
     write_csv(x = data_easyname_csv, path = csv_path)
 
-    data_easyname_numeric <- GLAD_rename(data_cleaned,
+    data_easyname_bin <- GLAD_rename(data_cleaned_bin,
       googlesheet = googlesheet,
       from = "newvar",
       to = "easyname"
-    ) %>%
-      add_numeric(data_raw)
+    )
 
     rds_name <- paste0("rds_renamed/", questionnaire, ".rds")
     rds_path <- paste0(dirpath, rds_name)
-    saveRDS(data_easyname_numeric, file = rds_path)
+    saveRDS(data_easyname_bin, file = rds_path)
 
     feather_name <- paste0("feather_renamed/", questionnaire, ".feather")
     feather_path <- paste0(dirpath, feather_name)
-    write_feather(data_easyname_numeric, path = feather_path)
+    write_feather(data_easyname_bin, path = feather_path)
   } else {
     csv_name <- paste0("csv/", questionnaire, ".csv")
     csv_path <- paste0(dirpath, csv_name)
     write_csv(x = data_cleaned_csv, path = csv_path)
 
-    data_cleaned_numeric <- add_numeric(data_cleaned, data_raw)
     rds_name <- paste0("rds/", questionnaire, ".rds")
     rds_path <- paste0(dirpath, rds_name)
-    saveRDS(data_cleaned_numeric, file = rds_path)
+    saveRDS(data_cleaned_bin, file = rds_path)
 
     feather_name <- paste0("feather/", questionnaire, ".feather")
     feather_path <- paste0(dirpath, feather_name)
-    write_feather(data_cleaned_numeric, path = feather_path)
+    write_feather(data_cleaned_bin, path = feather_path)
   }
 }

@@ -1,20 +1,27 @@
 # Exclude -99 and -88
 # -99 and -88 in subtitles
 
-continuous_point_plot_wo_outliers <- function(data, var, unit, title, googlesheet) {
-  min <- tryCatch(sheet_extract("min", var, googlesheet),
-    error = function(e) {
-      min(data[[var]], na.rm = T)
-    }
-  )
-  max <- tryCatch(sheet_extract("max", var, googlesheet),
-    error = function(e) {
-      max(data[[var]], na.rm = T)
-    }
-  )
-  if (assert_limits(max, min)) {
+continuous_point_plot_wo_outliers <- function(data, var, unit, title, limits, googlesheet) {
+  if (!is.null(limits)) {
+    min <- limits[1]
+    max <- limits[2]
+  } else {
+    min <- tryCatch(sheet_extract("min", var, googlesheet),
+      error = function(e) {
+        min(data[[var]], na.rm = T)
+      }
+    )
+    max <- tryCatch(sheet_extract("max", var, googlesheet),
+      error = function(e) {
+        max(data[[var]], na.rm = T)
+      }
+    )
+  }
+
+  if (check_limits(max, min)) {
     stop("Invalid limits")
   }
+
   length_missing <- sum(data[[var]] > max | data[[var]] < min, na.rm = T)
   data <- data %>% filter((data[[var]] <= max & data[[var]] >= min) | is.na(data[[var]]))
 
@@ -129,7 +136,7 @@ continuous_point_plot_w_outliers <- function(data, var, unit, title) {
   return(continuous_point_plot)
 }
 
-continous_point_plot <- function(data, var, googlesheet, include_outlier = TRUE) {
+continous_point_plot <- function(data, var, googlesheet, include_outlier = TRUE, limits = NULL) {
   title <- sheet_extract("title", var, googlesheet)
   if (length(title) > 1) {
     stop("More than one title matching the variable name.")
@@ -140,7 +147,7 @@ continous_point_plot <- function(data, var, googlesheet, include_outlier = TRUE)
     return(continuous_point_plot_w_outliers(data, var, unit, title))
   } else if (include_outlier == FALSE) {
     return(continuous_point_plot_wo_outliers(
-      data, var, unit, title,
+      data, var, unit, title, limits,
       googlesheet
     ))
   }

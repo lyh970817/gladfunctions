@@ -36,6 +36,7 @@ options(gargle_oauth_email = TRUE)
 
 ```{r setup}
 library(gladfunctions)
+devtools::load_all()
 ```
 
 ## Clean Qualtrics exports
@@ -68,7 +69,7 @@ dat_list <- GLAD_read(raw_path)
 * Clean all the questionnaire and export to `clean_path`
 
 ```{r clean all, eval = FALSE}
-GLAD_clean("All", dat_list)
+GLAD_clean("All", dat_list, clean_path)
 ```
 
 Do not apply limits to continuous variables, so we could later examine the
@@ -212,7 +213,8 @@ continuous_plots <- GLAD_plot(
   data = PAD,
   var = "pad.frequency_panic_attacks",
   googlesheet = sheet,
-  include_outlier = TRUE,
+  include_outlier = FALSE,
+  limits = c(1, 50),
   binwidth = "FD"
 )
 ```

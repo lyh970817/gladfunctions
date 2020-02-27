@@ -18,6 +18,8 @@
 #' @import ggformula
 #' @import lfactors
 
+palette <- c("#efc00b", "#b7dee8")
+
 sheet_extract <- function(col, var, googlesheet) {
   # Extract values for a specified variable from a specified column
 
@@ -25,9 +27,9 @@ sheet_extract <- function(col, var, googlesheet) {
   newvars <- googlesheet[["newvar"]]
 
   if (var %in% newvars) {
-    value <- googlesheet[[col]][which(googlesheet[["newvar"]] == var)]
+    value <- googlesheet[[col]][which(newvars == var)]
   } else if (var %in% easynames) {
-    value <- googlesheet[[col]][which(googlesheet[["easyname"]] == var)]
+    value <- googlesheet[[col]][which(easynames == var)]
   } else {
     stop(var, " does not exist in the dictionary.")
   }
@@ -35,7 +37,7 @@ sheet_extract <- function(col, var, googlesheet) {
   if (col %in% c("unit", "type", "title", "min", "max")) {
     value <- value %>%
       unique() %>%
-      na.omit()
+      .[!is.na(.)]
     if (col %in% c("min", "max")) {
       value <- as.numeric(value)
     }
@@ -78,6 +80,7 @@ get_categvars <- function(var, googlesheet) {
 #' @export
 GLAD_select <- function(data, which, googlesheet) {
   if (any(colnames(data) %in% googlesheet[["newvar"]])) {
+    # The specified names (which) are always easy names.
     items <- googlesheet[["newvar"]][googlesheet[["easyname"]] %in% which]
     items_num <- paste(items, "numeric", sep = ".")
     items_all <- c(items, items_num)
@@ -154,10 +157,3 @@ GLAD_getdescr_scal <- function(which, googlesheet) {
 #' `New.variable` and values being their descriptions.
 #' @export
 GLAD_getdescr <- Vectorize(GLAD_getdescr_scal, vectorize.args = "which")
-
-
-# GLAD_getdescr <- function(which, googlesheet) {
-#   descrs <- vector()
-#   for (var in which) descrs[var] <- sheet_extract("title", var, googlesheet)
-#   return(descrs)
-# }

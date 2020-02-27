@@ -34,9 +34,9 @@ GLAD_removehead <- function(data, googlesheet) {
   head_vars <- googlesheet[["oldvar"]][grep("HEAD", googlesheet[["newvar"]])]
   return(data[!colnames(data) %in% head_vars])
 }
+# These two above can be put in the python script
 
-questionnaire_clean <- function(questionnaire, data_raw, limits) {
-  sheet <- GLAD_sheet(questionnaire)[[1]]
+select_vars <- function(questionnaire, data_raw, sheet) {
 
   # "oldvar" are variables names Qualtrics raw files have.
   # They correponds to column names of a data set.
@@ -46,6 +46,7 @@ questionnaire_clean <- function(questionnaire, data_raw, limits) {
   morevars <- sheet_vars[which(!sheet_vars %in% colnames(data_raw))] %>%
     unique()
   if (length(morevars[!is.na(morevars)]) > 0) {
+    # One per row
     morevars_str <- paste(morevars, collapse = ", ")
     message(paste(
       morevars_str,
@@ -62,10 +63,15 @@ questionnaire_clean <- function(questionnaire, data_raw, limits) {
   # Find variables that have Qulatrics.derived.variables and Derived.variables
   # in "Comments"
   not_derived <- !grepl("[Dd]erived", sheet[["Comments"]])
-
   # Select only variables that are in the dataframe.
   vars <- sheet_vars[which(sheet_vars %in% colnames(data_raw) & not_derived)]
 
+  return(vars)
+}
+
+questionnaire_clean <- function(questionnaire, data_raw, path, limits) {
+  sheet <- GLAD_sheet(questionnaire)[[1]]
+  vars <- select_vars(questionnaire, data_raw, sheet)
   data_raw <- data_raw %>%
     mutate(
       Sex = factor(DEM.SEX.1.0, levels = c(0, 1), labels = c("Male", "Female")),
@@ -91,14 +97,14 @@ questionnaire_clean <- function(questionnaire, data_raw, limits) {
   # This exports New.variable name files.
   GLAD_export(data_cleaned, data_raw,
     questionnaire = questionnaire,
-    dirpath = clean_path, googlesheet = sheet,
+    dirpath = path, googlesheet = sheet,
     rename = FALSE
   )
 
   # This exports Easy.name files.
   GLAD_export(data_cleaned, data_raw,
     questionnaire = questionnaire,
-    dirpath = clean_path, googlesheet = sheet,
+    dirpath = path, googlesheet = sheet,
     rename = TRUE
   )
 }
@@ -123,13 +129,13 @@ questionnaire_clean <- function(questionnaire, data_raw, limits) {
 #' @param limits A logical indicating whether limits (min and max) are to
 #' be applied
 #' @export
-GLAD_clean <- function(questionnaire, dat_list, limits = TRUE) {
+GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE) {
   # We always need "DEM" to extract "Sex", "Age" and "Birthyear"
   dem <- dat_list[["DEM"]]
   if (questionnaire %in% sign_up) {
     # If the questionnaire is in sign-up hence in "DEM",
     # we already have "Sex", "Age" and "Birthyear" in the same file.
-    try(questionnaire_clean(questionnaire, dem, limits))
+    try(questionnaire_clean(questionnaire, dem, path, limits))
   } else if (questionnaire %in% names(dat_list)) {
     # if the questionnaire is not in sign-up we need to merge it with
     # those variables in "DEM".
@@ -144,14 +150,14 @@ GLAD_clean <- function(questionnaire, dat_list, limits = TRUE) {
       ],
       by = "ExternalReference"
       ) %>%
-      questionnaire_clean(questionnaire, ., limits))
+      questionnaire_clean(questionnaire, ., path, limits))
   } else if (questionnaire == "All") {
-    GLAD_cleanall(dat_list, limits)
+    GLAD_cleanall(dat_list, path, limits)
   }
 }
 
-GLAD_cleanall <- function(dat_list, limits = TRUE) {
+GLAD_cleanall <- function(dat_list, path, limits = TRUE) {
   for (q in questionnaires) {
-    GLAD_clean(q, dat_list, limits)
+    GLAD_clean(q, dat_list, path, limits)
   }
 }

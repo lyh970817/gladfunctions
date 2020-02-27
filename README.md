@@ -23,7 +23,11 @@ devtools::install_github("lyh970817/gladfunctions")
 
 * Vectorized `GLAD_sheet` function
 
-* A more complicated derived variable example on AGP
+* Some more complicated derived variable examples on AGP and on ED
+
+* Put negative to positive for all continuous variables in recoding
+
+* Specifying limits for plots - useful for 'include_outlier' examination._
 
 # Overview
 

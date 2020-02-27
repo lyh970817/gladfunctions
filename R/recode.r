@@ -140,10 +140,10 @@ GLAD_recode <- function(x, var, googlesheet, limits) {
     # can put it text which causes a warning when using
     # `as.numeric()`. We catch it so the user knows where the error
     # occurs.
-    x <- tryCatch(as.numeric(x),
+    x <- tryCatch(abs(as.numeric(x)),
       warning = function(w) {
         message("Non-numeric response in ", var)
-        return(as.numeric(x))
+        return(abs(as.numeric(x)))
       }
     )
 

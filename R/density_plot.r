@@ -1,5 +1,5 @@
 palette <- c("#efc00b", "#b7dee8")
-assert_limits <- function(max, min) {
+check_limits <- function(max, min) {
   if (length(min) > 1) {
     message(paste("More than one minimum for", var))
     return(TRUE)
@@ -19,7 +19,7 @@ assert_limits <- function(max, min) {
   return(FALSE)
 }
 
-hist_count <- function(data, var, googlesheet, include_outlier = TRUE, binwidth) {
+hist_count <- function(data, var, googlesheet, include_outlier = TRUE, limits, binwidth) {
   title <- sheet_extract("title", var, googlesheet)
 
   if (length(title) > 1) {
@@ -27,17 +27,18 @@ hist_count <- function(data, var, googlesheet, include_outlier = TRUE, binwidth)
   }
 
   if (include_outlier == FALSE) {
-    min <- tryCatch(sheet_extract("min", var, googlesheet),
-      error = function(e) {
-        min(data[[var]], na.rm = T)
-      }
-    )
-    max <- tryCatch(sheet_extract("max", var, googlesheet),
-      error = function(e) {
-        max(data[[var]], na.rm = T)
-      }
-    )
-    if (assert_limits(max, min)) {
+    if (!is.null(limits)) {
+      min <- limits[1]
+      max <- limits[2]
+    } else {
+      min <- tryCatch(sheet_extract("min", var, googlesheet),
+        error = function(e) min(data[[var]], na.rm = T)
+      )
+      max <- tryCatch(sheet_extract("max", var, googlesheet),
+        error = function(e) max(data[[var]], na.rm = T)
+      )
+    }
+    if (check_limits(max, min)) {
       stop("Invalid limits")
     }
     length_missing <- sum(data[[var]] > max | data[[var]] < min, na.rm = T)
@@ -60,8 +61,6 @@ hist_count <- function(data, var, googlesheet, include_outlier = TRUE, binwidth)
 
   if (binwidth == "FD") {
     binwidth <- 2 * IQR(data[[var]], na.rm = TRUE) / length(na.omit(data[[var]]))^(1 / 3)
-  } else {
-    binwidth <- 1
   }
 
   hist_count_sex_base <- ggplot(
@@ -123,20 +122,20 @@ hist_count <- function(data, var, googlesheet, include_outlier = TRUE, binwidth)
   return(hist_count_sex)
 }
 
-density_plot_bysex <- function(data, var, title, unit, googlesheet, include_outlier = TRUE, binwidth) {
+density_plot_bysex <- function(data, var, title, unit, googlesheet, include_outlier = TRUE, limits, binwidth) {
   if (include_outlier == FALSE) {
-    min <- tryCatch(sheet_extract("min", var, googlesheet),
-      error = function(e) {
-        min(data[[var]], na.rm = T)
-      }
-    )
-
-    max <- tryCatch(sheet_extract("max", var, googlesheet),
-      error = function(e) {
-        max(data[[var]], na.rm = T)
-      }
-    )
-    if (assert_limits(max, min)) {
+    if (!is.null(limits)) {
+      min <- limits[1]
+      max <- limits[2]
+    } else {
+      min <- tryCatch(sheet_extract("min", var, googlesheet),
+        error = function(e) min(data[[var]], na.rm = T)
+      )
+      max <- tryCatch(sheet_extract("max", var, googlesheet),
+        error = function(e) max(data[[var]], na.rm = T)
+      )
+    }
+    if (check_limits(max, min)) {
       stop("Invalid limits")
     }
     length_missing <- sum(data[[var]] > max | data[[var]] < min, na.rm = T)
@@ -252,19 +251,21 @@ density_plot_bysex <- function(data, var, title, unit, googlesheet, include_outl
   return(density_plot_bysex)
 }
 
-density_plot <- function(data, var, title, unit, googlesheet, include_outlier = FALSE, binwidth) {
+density_plot <- function(data, var, title, unit, googlesheet, include_outlier = FALSE, limits, binwidth) {
   if (include_outlier == FALSE) {
-    min <- tryCatch(sheet_extract("min", var, googlesheet),
-      error = function(e) {
-        min(data[[var]], na.rm = T)
-      }
-    )
-    max <- tryCatch(sheet_extract("max", var, googlesheet),
-      error = function(e) {
-        max(data[[var]], na.rm = T)
-      }
-    )
-    if (assert_limits(max, min)) {
+    if (!is.null(limits)) {
+      min <- limits[1]
+      max <- limits[2]
+    } else {
+      min <- tryCatch(sheet_extract("min", var, googlesheet),
+        error = function(e) min(data[[var]], na.rm = T)
+      )
+      max <- tryCatch(sheet_extract("max", var, googlesheet),
+        error = function(e) max(data[[var]], na.rm = T)
+      )
+    }
+
+    if (check_limits(max, min)) {
       stop("Invalid limits")
     }
     length_missing <- sum(data[[var]] > max | data[[var]] < min, na.rm = T)
@@ -379,29 +380,29 @@ density_plot <- function(data, var, title, unit, googlesheet, include_outlier = 
 }
 
 
-density_plot_all <- function(data, var, googlesheet, bysex = FALSE, include_outlier = TRUE, binwidth = "") {
+density_plot_all <- function(data, var, googlesheet, bysex = FALSE, include_outlier = TRUE, limits, binwidth = "") {
   title <- sheet_extract("title", var, googlesheet)
   unit <- sheet_extract("unit", var, googlesheet)
   if (binwidth == "FD") {
     binwidth <- 2 * IQR(data[[var]], na.rm = TRUE) / length(na.omit(data[[var]]))^(1 / 3)
-  } else {
-    binwidth <- 1
   }
   if (bysex == FALSE) {
     if (include_outlier == TRUE) {
-      return(density_plot(data, var, title, unit, googlesheet, include_outlier = TRUE, binwidth))
+      return(density_plot(data, var, title, unit, googlesheet,
+        include_outlier = TRUE, limits, binwidth
+      ))
     } else {
       return(density_plot(data, var, title, unit, googlesheet,
-        include_outlier = FALSE, binwidth
+        include_outlier = FALSE, limits, binwidth
       ))
     }
   } else {
     data <- subset(data, !is.na(data[["Sex"]]))
     if (include_outlier == TRUE) {
-      return(density_plot_bysex(data, var, title, unit, googlesheet, include_outlier = TRUE, binwidth))
+      return(density_plot_bysex(data, var, title, unit, googlesheet, include_outlier = TRUE, limits, binwidth))
     } else {
       return(density_plot_bysex(data, var, title, unit, googlesheet,
-        include_outlier = FALSE, binwidth
+        include_outlier = FALSE, limits, binwidth
       ))
     }
   }
