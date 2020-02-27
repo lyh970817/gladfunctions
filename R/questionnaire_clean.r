@@ -136,7 +136,21 @@ GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE) {
     # If the questionnaire is in sign-up hence in "DEM",
     # we already have "Sex", "Age" and "Birthyear" in the same file.
     try(questionnaire_clean(questionnaire, dem, path, limits))
-  } else if (questionnaire %in% names(dat_list)) {
+  } else if (questionnaire %in% c("NES", "MDDI")) {
+    try(dat_list[["ED"]] %>%
+      left_join(dem[
+        c(
+          "ExternalReference",
+          "DEM.SEX.1.0",
+          "DEM.AGE.1.0",
+          "DEM.DOB.3.0"
+        )
+      ],
+      by = "ExternalReference"
+      ) %>%
+      questionnaire_clean(questionnaire, ., path, limits))
+  }
+  else if (questionnaire %in% names(dat_list)) {
     # if the questionnaire is not in sign-up we need to merge it with
     # those variables in "DEM".
     try(dat_list[[questionnaire]] %>%
