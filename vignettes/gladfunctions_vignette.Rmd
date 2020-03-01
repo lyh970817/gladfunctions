@@ -34,6 +34,36 @@ options(gargle_oauth_email = TRUE)
   <img src="../glad_logo.jpg" width="300" class="center">
 </p>
 
+
+
+## List of functions in the package
+
+* `GLAD_read`: Read in all the Qualtrics exported raw csv files in the specified path.
+
+* `GLAD_sheet`: Read in the googlesheet dictionary sheet for a specified
+  questionnaire. Note that the googlesheet must be read through this
+  function and not by the `googlesheets4` package directly.
+
+* `GLAD_clean`: Cleans all questionnaires or one specified questionnaire
+  in 'dat_list' and creates exports.
+
+* `GLAD_select`: Exports selected variables from a data set by specifying their names.
+
+* `GLAD_derive`: Generates derived variables with names and formulae specified in the
+GLAD dictionary
+
+* `GLAD_getdescr`: Get Descripton (Title) for Selected Variables by specifying their names.
+
+* `GLAD_plot`: Generates plots for the specified variable in the GLAD data.
+
+* `GLAD_vartest`: Runs several variance tests (Levene's test, Fligner's test and Barlett's
+test) for comparing variance across gender.
+
+* `GLAD_missing`: Produces various summary statistics and plots for missingness
+examination of a questionnaire.
+
+* `GLAD_qplot`: Generates quantile plots for a specified variable in the GLAD data.
+
 ```{r setup}
 library(gladfunctions)
 devtools::load_all()
@@ -50,20 +80,25 @@ devtools::load_all()
   data and remove participant personal information). Please speak to Henry
   Rogers in the BioResource office.
 
+
+### Raw data
+
 ```{r, raw path}
 raw_path <- "../../../../Research/Data/GLAD/GLAD-Questionnaires-Cleaning/data_raw/"
 ```
+
+* Read in data files as a list from `raw_path`
+
+```{r read data, eval = FALSE}
+dat_list <- GLAD_read(raw_path)
+```
+
+### Clean data
 
 * Specify the path to export files to
 
 ```{r, clean path}
 clean_path <- "../../../../Research/Data/GLAD/GLAD-Questionnaires-Cleaning/data_clean/"
-```
-
-* Read in data file as a list from `raw_path`
-
-```{r read data, eval = FALSE}
-dat_list <- GLAD_read(raw_path)
 ```
 
 * Clean all the questionnaire and export to `clean_path`
@@ -88,14 +123,17 @@ GLAD_clean("CIDID", dat_list, clean_path)
 * Select variables to export with `Easy.name`
 
 ```{r select variables, eval = FALSE}
-# Take the first element of the sheet list - `GLAD_sheet` is a vectorized
-# function.
+# Take the first element of the sheet list - `GLAD_sheet` is a vectorised
+# function (vectorised functions take a vector and operate on all the items
+# in a vector). This means that we can read in multiple sheets at once and
+# store them in a list.
 
+# We need to use [[1]] (with double square brackets) to extract the necessary data from an R list.
 sheet <- GLAD_sheet("PAD")[[1]]
 PAD <-
   readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
 
-which <- colnames(PAD)[10:15]
+which <- c("pad.choking", "pad.chest_pain", "pad.nauseous", "pad.dizzy", "pad.hot_cold", "pad.numbness")
 PAD_subset <- GLAD_select(PAD, which, sheet)
 ```
 
@@ -126,11 +164,12 @@ sheet2 <- GLAD_sheet("PTSD")[[1]]
 AGP <- readRDS(paste(clean_path, "rds_renamed/AGP_Renamed.rds", sep = "/"))
 sheet3 <- GLAD_sheet("AGP")[[1]]
 
-PTSD <- GLAD_derive(PTSD, sheet2)
-AGP <- GLAD_derive(AGP, sheet3)
+PTSD_withderived <- GLAD_derive(PTSD, sheet2)
+AGP_withderived <- GLAD_derive(AGP, sheet3)
 
-tail(colnames(PTSD), 2)
-tail(colnames(AGP), 4)
+# These are the last few columns we just added
+tail(colnames(PTSD_withderived), 2)
+tail(colnames(AGP_withderived), 4)
 ```
 
 ## Get variable descriptions
@@ -141,14 +180,7 @@ GLAD_getdescr(colnames(PAD)[5:8], sheet)
 
 ### Special feature: `as.numeric` factor variables
 
-We can freely `as.numeric` factor variables as they are recoded to class `lfactor`
-from the `lfactor` package, which preserves numeric values.
-
-For a `Binary` variable:
-
-```{r lfactor, results = "markup"}
-unique(as.numeric(PAD[["pad.anx_future_panic_attacks"]]))
-```
+We normally are unable to recode factor variables as numeric variable.
 
 Applying `as.numeric` to the R built-in class `factor` only returns its
 internal integer representation.
@@ -157,21 +189,20 @@ internal integer representation.
 unique(as.numeric(as.factor(PAD[["pad.anx_future_panic_attacks"]])))
 ```
 
-A simple function to convert all `factor` to `numeric`:
+However, the `lfactor` package preserves numeric values when recoding a
+numeric variable to factor. Therefore, we can use this package to recode
+our factor variables to numeric variables.
 
-```{r convert numeric, eval = FALSE}
-as_numeric_fct <- function(x) {
-  if (is.factor(x)) as.numeric(x) else x
-}
+For example, for a `Binary` variable:
 
-PAD_num <- as.data.frame(lapply(PAD, as_numeric_fct))
-
-# Or with `purrr` in `tidyverse` to get a tibble
-library(tidyverse)
-PAD_num <- map_df(PAD, as_numeric_fct)
+```{r lfactor, results = "markup"}
+unique(as.numeric(PAD[["pad.anx_future_panic_attacks"]]))
 ```
 
-Or use numeric copies of the factor variables
+Alternatively, you can use numeric copies of the factor variables. These
+numeric copies have been copied from the raw data and put into the cleaned
+data. These copy variables have the same names as the original variables
+but with "_numeric" at the end.
 
 ```{r numeric factor, results = "markup"}
 grep("numeric", colnames(PAD), value = T)
@@ -202,7 +233,7 @@ GLAD_plot(
 * Note that for these variables, it is possible to supply a logical
   argument `include_outlier`. For variables that don't have maximum or
   minimum in the dictionary hence haven't been cleaned, this is useful for
-  deciding cut-offs. When `include_outlier` is set to `FALSE`, it's also
+  deciding cut-offs. When `include_outlier` is set to `TRUE`, it's also
   possible to specify your own limits for plots through the `limit` argument.
 
 * Set `binwidth = "FD"` to apply the Freedman-Diaconis rule for deciding
@@ -240,7 +271,7 @@ continuous_plots$densitybysex
   selected.  Put in one of the variables representing the options.
 
 * Don't seem to have a general way to extract the title from the
-  dictionary. Specify the title yourself.
+  dictionary. Specify the title for the plot yourself.
 
 ```{r categorical_plot, fig.width = 10, fig.height = 10}
 GLAD_plot(
@@ -258,6 +289,8 @@ GLAD_qplot(data = PAD, var = "pad.frequency_panic_attacks", googlesheet = sheet)
 ```
 
 ## Variance tests by sex
+
+These tests allow us to explore whether variances differ across sex.
 
 ```{r, results = "markup"}
 GLAD_vartest(data = PAD, var = "pad.frequency_panic_attacks")
@@ -289,8 +322,8 @@ missingness$descr
 missingness$freq
 ```
 
-A value of '1' for a variable in the left most column indicates which
-missing percentage it has.
+The table below: a value of '1' indicates the percentage of participants
+missing for the corresponding variable.
 
 ```{r missingness table}
 print(missingness$table)

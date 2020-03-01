@@ -19,6 +19,4 @@ corresponding dictionary information for 'data'.}
 }
 \description{
 Exports selected variables from a data set by specifying their names.
-
-Exports selected variables from a data set by specifying their names.
 }
