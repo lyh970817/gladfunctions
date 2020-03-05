@@ -94,7 +94,9 @@ get_selected <- function(data, which, googlesheet) {
 #' Exports selected variables specified through a *.txt file
 #'
 #' @param clean_path Path to where the exported files are.
-#' @param which Path to the *.txt file containing required variables.
+#' @param which Path to the *.txt file containing required variables. Each
+#' text file should correspond to and has the name of a questionnaire. The
+#' variables within each text file should be on seperate lines.
 #' @export
 GLAD_select <- function(clean_path, which) {
   questionnaires <- str_split(which, boundary("word")) %>%

@@ -66,7 +66,6 @@ examination of a questionnaire.
 
 ```{r setup}
 library(gladfunctions)
-devtools::load_all()
 ```
 
 ## Clean Qualtrics exports
@@ -120,21 +119,12 @@ GLAD_clean("All", dat_list, clean_path, limits = FALSE)
 GLAD_clean("CIDID", dat_list, clean_path)
 ```
 
-* Select variables to export with `Easy.name`
+* Select variables to export with text files containing the `Easy.name`s.
+  Each text file should have the name of and correspond to a questionnaire
+  and each variable name within should be on a seperate line.
 
 ```{r select variables, eval = FALSE}
-# Take the first element of the sheet list - `GLAD_sheet` is a vectorised
-# function (vectorised functions take a vector and operate on all the items
-# in a vector). This means that we can read in multiple sheets at once and
-# store them in a list.
-
-# We need to use [[1]] (with double square brackets) to extract the necessary data from an R list.
-sheet <- GLAD_sheet("PAD")[[1]]
-PAD <-
-  readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
-
-which <- c("pad.choking", "pad.chest_pain", "pad.nauseous", "pad.dizzy", "pad.hot_cold", "pad.numbness")
-PAD_subset <- GLAD_select(PAD, which, sheet)
+selected_list <- GLAD_select(clean_path, c("DEM.txt", "PAD.txt"))
 ```
 
 ## Read in data file and dictionary sheet
@@ -149,6 +139,14 @@ PAD_subset <- GLAD_select(PAD, which, sheet)
 ```{r read in data files}
 PAD <-
   readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
+
+# `GLAD_sheet` is a vectorised function (vectorised functions take a vector
+# and operate on all the items in a vector). This means that we can read in
+# multiple sheets at once and store them in a list.
+
+# We need to use [[1]] (with double square brackets) to extract the first
+# element of an R list list.
+
 sheet <- GLAD_sheet("PAD")[[1]]
 ```
 
