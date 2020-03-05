@@ -17,7 +17,7 @@ GLAD_read <- function(path) {
     # rows in the file
     # Maybe don't read in the file twice... Change it later.
     dat_list[[i]] <- read_csv(raw_files[[i]],
-      skip = 3, col_names = col_names
+      skip = 3, col_names = col_names, guess_max = 30000
     ) %>%
       select(-c(seq(1, 12), seq(14, 17)))
 

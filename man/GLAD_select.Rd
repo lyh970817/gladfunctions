@@ -4,19 +4,14 @@
 \alias{GLAD_select}
 \title{Exports Selected Variables From a Data Set}
 \usage{
-GLAD_select(data, which, googlesheet)
-
-GLAD_select(data, which, googlesheet)
+GLAD_select(clean_path, which)
 }
 \arguments{
-\item{data}{The dataframe containing the variables to be exported,
+\item{clean_path}{Path to where the exported files are.
 outputted by 'GLAD_clean' or 'GLAD_cleanall'.}
 
-\item{which}{An character vector indicating the items to be export.}
-
-\item{googlesheet}{A dataframe created by 'GLAD_sheet' that contains
-corresponding dictionary information for 'data'.}
+\item{which}{Path to the *.txt file containing required variables.}
 }
 \description{
-Exports selected variables from a data set by specifying their names.
+Exports selected variables specified through a *.txt file
 }

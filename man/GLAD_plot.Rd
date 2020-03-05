@@ -7,9 +7,10 @@
 GLAD_plot(
   data,
   var,
-  title = "",
+  title = NULL,
   include_outlier = TRUE,
-  binwidth = "",
+  limits = NULL,
+  binwidth = 1,
   googlesheet
 )
 }
@@ -24,6 +25,9 @@ variables that allow multiple options to be selected.}
 
 \item{include_outlier}{A logical. Whether to include cases exceeding the
 minimum and maximum in the dictionary, if they exist in 'data'.}
+
+\item{limits}{A numeric vector of two elements, to be used as minimum
+and maximum when 'include_outlier' is 'FALSE'.}
 
 \item{binwidth}{A number or a character string "FD". Only applies to
 continuous variables. If specified as "FD", the Freedman-Diaconis rule

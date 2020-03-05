@@ -2,10 +2,10 @@
 #' @import ggplot2
 #' @import knitr
 #' @importFrom kableExtra kable_styling scroll_box
-#' @importFrom purrr map_chr map_df map2_df map_dbl imap_dfc map_lgl map2_lgl
+#' @importFrom purrr map_chr map_df map2_df map2 map_dbl imap_dfc map_lgl map2_lgl
 #' @importFrom dplyr select group_by filter bind_cols count rename mutate
 #' left_join nth everything contains summarise
-#' @importFrom stringr str_extract str_split
+#' @importFrom stringr str_extract str_split boundary
 #' @importFrom tidyr gather
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom psych scoreItems
@@ -68,17 +68,7 @@ get_categvars <- function(var, googlesheet) {
   return(vars)
 }
 
-#' Exports Selected Variables From a Data Set
-#'
-#' Exports selected variables from a data set by specifying their names.
-#'
-#' @param data The dataframe containing the variables to be exported,
-#' outputted by 'GLAD_clean' or 'GLAD_cleanall'.
-#' @param which An character vector indicating the items to be export.
-#' @param googlesheet A dataframe created by 'GLAD_sheet' that contains
-#' corresponding dictionary information for 'data'.
-#' @export
-GLAD_select <- function(data, which, googlesheet) {
+get_selected <- function(data, which, googlesheet) {
   if (any(colnames(data) %in% googlesheet[["newvar"]])) {
     # The specified names (which) are always easy names.
     items <- googlesheet[["newvar"]][googlesheet[["easyname"]] %in% which]
@@ -99,6 +89,27 @@ GLAD_select <- function(data, which, googlesheet) {
   }
 }
 
+#' Exports Selected Variables From a Data Set
+#'
+#' Exports selected variables specified through a *.txt file
+#'
+#' @param clean_path Path to where the exported files are.
+#' @param which Path to the *.txt file containing required variables.
+#' @export
+GLAD_select <- function(clean_path, which) {
+  questionnaires <- str_split(which, boundary("word")) %>%
+    map_chr(nth, -1) %>%
+    str_extract("[A-Z]*")
+  sheets <- GLAD_sheet(questionnaires)
+  names(which) <- questionnaires
+  select_list <- map2(questionnaires, sheets, function(q, s) {
+    vars <- readLines(which[q])
+    dat <- readRDS(file.path(clean_path, "rds_renamed", paste0(q, "_Renamed.rds")))
+    selected_dat <- get_selected(dat, vars, s)
+  }) %>% setNames(questionnaires)
+  return(select_list)
+}
+
 get_questionnaire <- function(googlesheet) {
   # Get the name of the questionnaire
   questionnaire <- str_split(
@@ -109,36 +120,6 @@ get_questionnaire <- function(googlesheet) {
     unique() %>%
     .[!is.na(.)]
   return(questionnaire)
-}
-
-#' Exports Selected Variables From a Data Set
-#'
-#' Exports selected variables from a data set by specifying their names.
-#'
-#' @param data The dataframe containing the variables to be exported,
-#' outputted by 'GLAD_clean' or 'GLAD_cleanall'.
-#' @param which An character vector indicating the items to be export.
-#' @param googlesheet A dataframe created by 'GLAD_sheet' that contains
-#' corresponding dictionary information for 'data'.
-#' @export
-GLAD_select <- function(data, which, googlesheet) {
-  if (any(colnames(data) %in% googlesheet[["newvar"]])) {
-    items <- googlesheet[["newvar"]][googlesheet[["easyname"]] %in% which]
-    items_num <- paste(items, "numeric", sep = ".")
-    items_all <- c(items, items_num)
-    return(bind_cols(
-      data[c("ID", "Sex", "Age", "Birthyear")],
-      data[colnames(data) %in% items_all]
-    ))
-  }
-  if (any(colnames(data) %in% googlesheet[["easyname"]])) {
-    items_num <- paste(which, "numeric", sep = ".")
-    items_all <- c(which, items_num)
-    return(bind_cols(
-      data[c("ID", "Sex", "Age", "Birthyear")],
-      data[colnames(data) %in% items_all]
-    ))
-  }
 }
 
 GLAD_getdescr_scal <- function(which, googlesheet) {
