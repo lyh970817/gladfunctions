@@ -47,7 +47,7 @@ options(gargle_oauth_email = TRUE)
 * `GLAD_clean`: Cleans all questionnaires or one specified questionnaire
   in 'dat_list' and creates exports.
 
-* `GLAD_select`: Exports selected variables from a data set by specifying their names.
+* `GLAD_select`: Exports selected variables from a data set by specifying their names in a text file.
 
 * `GLAD_derive`: Generates derived variables with names and formulae specified in the
 GLAD dictionary
@@ -120,11 +120,17 @@ GLAD_clean("CIDID", dat_list, clean_path)
 ```
 
 * Select variables to export with text files containing the `Easy.name`s.
-  Each text file should have the name of and correspond to a questionnaire
-  and each variable name within should be on a seperate line.
+  Each text file should have the name of and correspond to a questionnaire.
+  Each variable name within the text file should be in a seperate line.
+
+* People might request different data formats. Use `write_feather` from the
+  `feather` package for Python users or `write_sav`, `write_sas` and
+  `write_dta` from the `haven` package respectively for SPSS/JASP, SAS and
+  Stata users.
 
 ```{r select variables, eval = FALSE}
 selected_list <- GLAD_select(clean_path, c("DEM.txt", "PAD.txt"))
+saveRDS(selected_list[[1]], "./DEM.rds")
 ```
 
 ## Read in data file and dictionary sheet
