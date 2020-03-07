@@ -20,6 +20,16 @@
 
 palette <- c("#efc00b", "#b7dee8")
 
+GLAD_sheetnames <- function(url = GLAD_url) {
+  GLAD_sheetnames <- sheets_sheets(url) %>%
+    .[grep("Overview|Tracker|Updates|Cut offs|GLAD.complete|Information",
+      .,
+      invert = T
+    )]
+
+  return(GLAD_sheetnames)
+}
+
 sheet_extract <- function(col, var, googlesheet) {
   # Extract values for a specified variable from a specified column
 
@@ -68,50 +78,6 @@ get_categvars <- function(var, googlesheet) {
   return(vars)
 }
 
-get_selected <- function(data, which, googlesheet) {
-  if (any(colnames(data) %in% googlesheet[["newvar"]])) {
-    # The specified names (which) are always easy names.
-    items <- googlesheet[["newvar"]][googlesheet[["easyname"]] %in% which]
-    items_num <- paste(items, "numeric", sep = ".")
-    items_all <- c(items, items_num)
-    return(bind_cols(
-      data[c("ID", "Sex", "Age", "Birthyear")],
-      data[colnames(data) %in% items_all]
-    ))
-  }
-  if (any(colnames(data) %in% googlesheet[["easyname"]])) {
-    items_num <- paste(which, "numeric", sep = ".")
-    items_all <- c(which, items_num)
-    return(bind_cols(
-      data[c("ID", "Sex", "Age", "Birthyear")],
-      data[colnames(data) %in% items_all]
-    ))
-  }
-}
-
-#' Exports Selected Variables From a Data Set
-#'
-#' Exports selected variables specified through a *.txt file
-#'
-#' @param clean_path Path to where the exported files are.
-#' @param which Path to the *.txt file containing required variables. Each
-#' text file should correspond to and has the name of a questionnaire. The
-#' variables within each text file should be on seperate lines.
-#' @export
-GLAD_select <- function(clean_path, which) {
-  questionnaires <- str_split(which, boundary("word")) %>%
-    map_chr(nth, -1) %>%
-    str_extract("[A-Z]*")
-  sheets <- GLAD_sheet(questionnaires)
-  names(which) <- questionnaires
-  select_list <- map2(questionnaires, sheets, function(q, s) {
-    vars <- readLines(which[q])
-    dat <- readRDS(file.path(clean_path, "rds_renamed", paste0(q, "_Renamed.rds")))
-    selected_dat <- get_selected(dat, vars, s)
-  }) %>% setNames(questionnaires)
-  return(select_list)
-}
-
 get_questionnaire <- function(googlesheet) {
   # Get the name of the questionnaire
   questionnaire <- str_split(
@@ -140,3 +106,49 @@ GLAD_getdescr_scal <- function(which, googlesheet) {
 #' `New.variable` and values being their descriptions.
 #' @export
 GLAD_getdescr <- Vectorize(GLAD_getdescr_scal, vectorize.args = "which")
+
+get_selected <- function(data, which, googlesheet) {
+  if (any(colnames(data) %in% googlesheet[["newvar"]])) {
+    # The specified names (which) are always easy names.
+    items <- googlesheet[["newvar"]][googlesheet[["easyname"]] %in% which]
+    items_num <- paste(items, "numeric", sep = ".")
+    items_all <- c(items, items_num)
+    return(bind_cols(
+      data[c("ID", "Sex", "Age", "Birthyear")],
+      data[colnames(data) %in% items_all]
+    ))
+  }
+  if (any(colnames(data) %in% googlesheet[["easyname"]])) {
+    items_num <- paste(which, "numeric", sep = ".")
+    items_all <- c(which, items_num)
+    return(bind_cols(
+      data[c("ID", "Sex", "Age", "Birthyear")],
+      data[colnames(data) %in% items_all]
+    ))
+  }
+}
+
+#' Read in Selected Variables From Data sets to a list
+#'
+#' Read in selected variables specified through *.txt files from data sets
+#' to a list
+#'
+#' @param clean_path Path to the folder containing the  exported files.
+#' @param which A character vector specifying paths to the *.txt files containing required variables. Each
+#' text file should correspond to and has the name of a questionnaire. The
+#' variables within each text file should be on seperate lines.
+#' @return A list of data frames
+#' @export
+GLAD_select <- function(clean_path, which) {
+  questionnaires <- str_split(which, boundary("word")) %>%
+    map_chr(nth, -1) %>%
+    str_extract("[A-Z]*")
+  sheets <- GLAD_sheet(questionnaires)
+  names(which) <- questionnaires
+  select_list <- map2(questionnaires, sheets, function(q, s) {
+    vars <- readLines(which[q])
+    dat <- readRDS(file.path(clean_path, "rds_renamed", paste0(q, "_Renamed.rds")))
+    selected_dat <- get_selected(dat, vars, s)
+  }) %>% setNames(questionnaires)
+  return(select_list)
+}

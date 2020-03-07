@@ -2,16 +2,21 @@
 % Please edit documentation in R/auxi_fun.r
 \name{GLAD_select}
 \alias{GLAD_select}
-\title{Exports Selected Variables From a Data Set}
+\title{Read in Selected Variables From Data sets to a list}
 \usage{
 GLAD_select(clean_path, which)
 }
 \arguments{
-\item{clean_path}{Path to where the exported files are.
-outputted by 'GLAD_clean' or 'GLAD_cleanall'.}
+\item{clean_path}{Path to the folder containing the  exported files.}
 
-\item{which}{Path to the *.txt file containing required variables.}
+\item{which}{A character vector specifying paths to the *.txt files containing required variables. Each
+text file should correspond to and has the name of a questionnaire. The
+variables within each text file should be on seperate lines.}
+}
+\value{
+A list of data frames
 }
 \description{
-Exports selected variables specified through a *.txt file
+Read in selected variables specified through *.txt files from data sets
+to a list
 }

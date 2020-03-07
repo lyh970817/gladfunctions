@@ -60,13 +60,3 @@ GLAD_sheet_scal <- function(questionnaire) {
 #' @return A dataframe containing information of the dictionary sheet.
 #' @export
 GLAD_sheet <- Vectorize(GLAD_sheet_scal, SIMPLIFY = FALSE)
-
-GLAD_sheetnames <- function(url = GLAD_url) {
-  GLAD_sheetnames <- sheets_sheets(url) %>%
-    .[grep("Overview|Tracker|Updates|Cut offs|GLAD.complete|Information",
-      .,
-      invert = T
-    )]
-
-  return(GLAD_sheetnames)
-}
