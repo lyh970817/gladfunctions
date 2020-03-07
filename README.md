@@ -6,7 +6,6 @@
 
 A collection of R functions to clean, export, summarise and plot questionnaire data of the GLAD (Genetic Links to Anxiety and Depression) study.
 
-
 # How to Install
 
 Requires the `devtools` package:
@@ -27,7 +26,9 @@ devtools::install_github("lyh970817/gladfunctions")
 
 * Put negative to positive for all continuous variables in recoding
 
-* Specifying limits for plots - useful for `include_outlier` examination.
+* Specifying limits for plots - useful for `include_outlier` examination
+
+* Using text files named after questionnaire names containing variable lists to select variables
 
 # Overview
 
@@ -49,7 +50,7 @@ Please speak to **Henry Rogers** in the **BioResource Office** for a `python` sc
 
 Please open an issue on this GitHub page to report bugs and suggest changes.
 
-# Upcoming
+# To-do
 
 * Gender difference plots for all the continuous variables
 
