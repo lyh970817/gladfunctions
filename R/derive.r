@@ -40,6 +40,7 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
   }
   keys_pos <- which(!is.na(googlesheet[["score_key"]]))
 
+  browser()
   if (length(keys_pos) == 0) {
     message(paste(questionnaire, "has no Score.key."))
     return(data)
@@ -51,11 +52,11 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
 
   if (length(all_keys) >= 1) {
     if (!any(formulae == questionnaire, na.rm = T)) {
-      stop(questionnaire, " has no total score formula.")
+      message(questionnaire, " has no total score formula.")
+    } else {
+      total_score_name <- vars[which(formulae == questionnaire)]
+      data[total_score_name] <- get_score(all_keys, data_items)
     }
-    total_score_name <- vars[which(formulae == questionnaire)]
-    data[total_score_name] <-
-      get_score(all_keys, data_items)
   }
 
   subscales <- unique(googlesheet[["subscale"]]) %>%
@@ -129,6 +130,7 @@ GLAD_formula <- function(data, googlesheet, questionnaire) {
 GLAD_derive <- function(data, googlesheet) {
   # Get the name of the questionnaire
   questionnaire <- get_questionnaire(googlesheet)
+  browser()
   data <- data %>%
     GLAD_score(googlesheet, questionnaire = questionnaire) %>%
     GLAD_formula(googlesheet, questionnaire = questionnaire)
