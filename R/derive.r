@@ -40,7 +40,6 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
   }
   keys_pos <- which(!is.na(googlesheet[["score_key"]]))
 
-  browser()
   if (length(keys_pos) == 0) {
     message(paste(questionnaire, "has no Score.key."))
     return(data)
