@@ -129,7 +129,6 @@ GLAD_formula <- function(data, googlesheet, questionnaire) {
 GLAD_derive <- function(data, googlesheet) {
   # Get the name of the questionnaire
   questionnaire <- get_questionnaire(googlesheet)
-  browser()
   data <- data %>%
     GLAD_score(googlesheet, questionnaire = questionnaire) %>%
     GLAD_formula(googlesheet, questionnaire = questionnaire)
