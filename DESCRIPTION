@@ -25,8 +25,9 @@ Imports:
     ggformula,
     ggrepel,
     psych,
-    car
-RoxygenNote: 7.0.2
+    car,
+    feather
+RoxygenNote: 7.1.0
 Suggests:
     knitr,
     rmarkdown,
