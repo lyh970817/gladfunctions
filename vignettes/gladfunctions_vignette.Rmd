@@ -111,14 +111,15 @@ clean_path <- "~/Data/GLAD/data_clean/"
 
 * Clean all the questionnaire and export to `clean_path`
 
-Specify `limits = FALSE` to avoid applying limits to continuous variables,
-so we could later examine the effects of limits with plotting functions.
+    - Specify `limits = FALSE` to avoid applying limits to continuous
+      variables, so we could later examine the effects of limits with
+      plotting functions.
 
-Specify `rename = TRUE` to rename all variable names to `Easy.name`
-(`New.variable` names if `FALSE`)
+    - Specify `rename = TRUE` to rename all variable names to `Easy.name`
+      (`New.variable` names if `FALSE`)
 
-Specify `format` which should be one of `rds`, `feather`, `sav` (for
-SPSS/JASP), `sas` (for SAS) and `dta` (for Stata).
+    - Specify `format` which should be one of `rds`, `feather`, `sav` (for
+      SPSS/JASP), `sas` (for SAS) and `dta` (for Stata).
 
 ```{r clean all, eval = FALSE}
 GLAD_clean("All", dat_list, clean_path, limits = FALSE, rename = TRUE, format = "rds")
