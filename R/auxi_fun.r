@@ -1,4 +1,3 @@
-library(tidyverse)
 #' @importFrom magrittr %>%
 #' @import ggplot2
 #' @import knitr
