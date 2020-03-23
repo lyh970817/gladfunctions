@@ -25,6 +25,15 @@ knitr::opts_chunk$set(
   warning = FALSE,
   echo = TRUE
 )
+library(googlesheets4)
+sheets_auth(
+  email = gargle::gargle_oauth_email(),
+  path = "../../GLAD-Questionnaires/sheet_scripts/glad-dict.json",
+  scopes = "https://www.googleapis.com/auth/spreadsheets",
+  cache = gargle::gargle_oauth_cache(),
+  use_oob = gargle::gargle_oob_default(),
+  token = NULL
+)
 
 # googlesheets4 option, see https://gargle.r-lib.org/articles/non-interactive-auth.html
 options(gargle_oauth_email = TRUE)
@@ -83,7 +92,7 @@ library(gladfunctions)
 ### Raw data
 
 ```{r, raw path}
-raw_path <- "../../../../Research/Data/GLAD/GLAD-Questionnaires-Cleaning/data_raw/"
+raw_path <- "~/Data/GLAD/data_raw/"
 ```
 
 * Read in data files as a list from `raw_path`
@@ -97,27 +106,33 @@ dat_list <- GLAD_read(raw_path)
 * Specify the path to export files to
 
 ```{r, clean path}
-clean_path <- "../../../../Research/Data/GLAD/GLAD-Questionnaires-Cleaning/data_clean/"
+clean_path <- "~/Data/GLAD/data_clean/"
 ```
 
 * Clean all the questionnaire and export to `clean_path`
 
+Specify `limits = FALSE` to avoid applying limits to continuous variables,
+so we could later examine the effects of limits with plotting functions.
+
+Specify `rename = TRUE` to rename all variable names to `Easy.name`
+(`New.variable` names if `FALSE`)
+
+Specify `format` which should be one of `rds`, `feather`, `sav` (for
+SPSS/JASP), `sas` (for SAS) and `dta` (for Stata).
+
 ```{r clean all, eval = FALSE}
-GLAD_clean("All", dat_list, clean_path)
-```
-
-Do not apply limits to continuous variables, so we could later examine the
-effects of limits with plotting functions.
-
-```{r clean keep limits, eval = FALSE}
-GLAD_clean("All", dat_list, clean_path, limits = FALSE)
+GLAD_clean("All", dat_list, clean_path, limits = FALSE, rename = TRUE, format = "rds")
 ```
 
 * Clean a specified questionnaire and export to `clean_path`
 
 ```{r clean specified questionnaire, eval = FALSE}
-GLAD_clean("CIDID", dat_list, clean_path)
+GLAD_clean("CIDID", dat_list, clean_path, limits = FALSE, rename = TRUE, format = "rds")
 ```
+
+(Sorry I am being stupid - I should have the argument here, not in the
+above function. But if we're not selecting variables that would work for
+now,  and this chunk should not be touched)
 
 * Select variables to export with text files containing the `Easy.name`s.
   Each text file should have the name of and correspond to a questionnaire.
