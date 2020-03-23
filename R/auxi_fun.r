@@ -2,7 +2,7 @@
 #' @import ggplot2
 #' @import knitr
 #' @importFrom kableExtra kable_styling scroll_box
-#' @importFrom purrr map_chr map_df map2_df map2 map_dbl imap_dfc map_lgl map2_lgl
+#' @importFrom purrr map map_chr map_df map2_df map2 map_dbl imap_dfc map_lgl map2_lgl
 #' @importFrom dplyr select group_by filter bind_cols count rename mutate
 #' left_join nth everything contains summarise
 #' @importFrom stringr str_extract str_split boundary
@@ -11,6 +11,7 @@
 #' @importFrom psych scoreItems
 #' @importFrom stats fligner.test bartlett.test
 #' @importFrom car leveneTest
+#' @importFrom haven labelled write_sav write_sas write_dta
 #' @importFrom readr write_csv read_csv
 #' @importFrom googlesheets4 read_sheet sheets_sheets
 #' @importFrom summarytools descr tb freq

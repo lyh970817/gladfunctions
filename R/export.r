@@ -1,5 +1,12 @@
+get_path <- function(questionnaires, rename = FALSE, format, dirpath) {
+  name <- paste0(format, "_renamed/", questionnaire, ".", format)
+  path <- paste0(dirpath, name)
+  return(path)
+}
+
 # To be put in GLAD_recode_df
-add_numeric <- function(data_cleaned, data_raw) {
+to_binary <- function(data_cleaned, data_raw,
+                      format, path) {
   # Add numeric version variables for factor varaibles.
 
   # These would have been recoded to factors in `data_cleaned` because in
@@ -16,10 +23,16 @@ add_numeric <- function(data_cleaned, data_raw) {
   ))
   numeric_names <- paste0(names(which_numeric_factor), "_numeric")
   data_cleaned[numeric_names] <- data_raw[which_numeric_factor]
-  return(data_cleaned)
+
+  if (format == "feather") {
+    write_feather(data_cleaned, path = path)
+  }
+  if (format == "rds") {
+    saveRDS(data_cleaned, file = path)
+  }
 }
 
-to_csv <- function(data_cleaned, data_raw) {
+to_csv <- function(data_cleaned, data_raw, path) {
 
   # Get the factor positions to have these changed to data in the raw file
   # (which is of numeric type) for csv export (`factor` will be exported
@@ -27,62 +40,73 @@ to_csv <- function(data_cleaned, data_raw) {
 
   which_factor <- which(map_lgl(data_cleaned, is.factor))
   data_cleaned[which_factor] <- data_raw[which_factor]
-  return(data_cleaned)
+  write_csv(x = data_cleaned, path = path)
 }
 
-GLAD_export <- function(data_cleaned, data_raw, questionnaire, dirpath, googlesheet, rename = FALSE) {
-  dir.create(file.path(dirpath, "csv_renamed"), showWarnings = FALSE)
-  dir.create(file.path(dirpath, "csv"), showWarnings = FALSE)
-  dir.create(file.path(dirpath, "rds_renamed"), showWarnings = FALSE)
-  dir.create(file.path(dirpath, "rds"), showWarnings = FALSE)
-  dir.create(file.path(dirpath, "feather_renamed"), showWarnings = FALSE)
-  dir.create(file.path(dirpath, "feather"), showWarnings = FALSE)
+to_haven <- function(data_cleaned, format, path) {
 
-  data_cleaned_csv <- to_csv(data_cleaned, data_raw)
+  # Get the factor positions to have these changed to data in the raw file
+  # (which is of numeric type) for csv export (`factor` will be exported
+  # as character strings in csv)
+
+  which_factor <- which(map_lgl(data_cleaned, is.factor))
+  data_cleaned[which_factor] <- map(
+    data_cleaned[which_factor],
+    function(col) {
+      col <- labelled(as.numeric(col),
+        labels = llevels(col) %>% setNames(levels(col))
+      )
+      return(col)
+    }
+  ) %>%
+    as.data.frame()
+  # There would be a strange warning about `bind_rows` would cause haven
+  # labelled information to lose here if `map_df` is usd instead
+
+  if (format == "sav") {
+    write_sav(data_cleaned, path)
+  }
+  if (format == "dta") {
+    write_dta(data_cleaned, path)
+  }
+  if (format == "sas") {
+    write_sas(data_cleaned, path)
+  }
+}
+
+
+GLAD_export <- function(data_cleaned, data_raw, questionnaire, dirpath, googlesheet, format, rename) {
+  if (length(format) > 1) {
+    stop("Only one format allowed.")
+  }
+  if (!format %in% c("rds", "sav", "sas", "feather", "csv")) {
+    stop("format must be one of c('rds', 'sav', 'sas', 'feather', 'csv')")
+  }
 
   if (rename == TRUE) {
+    dirpath <- paste0(dirpath, format, "_renamed")
+    dir.create(dirpath, showWarnings = FALSE)
     questionnaire <- paste0(questionnaire, "_Renamed")
-
-    data_easyname_csv <- GLAD_rename(data_cleaned_csv,
+    data_cleaned <- GLAD_rename(data_cleaned,
       googlesheet = googlesheet,
       from = "newvar",
       to = "easyname"
     )
-
-
-    csv_name <- paste0("csv_renamed/", questionnaire, ".csv")
-    csv_path <- paste0(dirpath, csv_name)
-    write_csv(x = data_easyname_csv, path = csv_path)
-
-    data_easyname_bin <- GLAD_rename(data_cleaned,
-      googlesheet = googlesheet,
-      from = "newvar",
-      to = "easyname"
-    )
-
-    data_easyname_bin <- add_numeric(data_easyname_bin, data_raw)
-
-    rds_name <- paste0("rds_renamed/", questionnaire, ".rds")
-    rds_path <- paste0(dirpath, rds_name)
-    saveRDS(data_easyname_bin, file = rds_path)
-
-    feather_name <- paste0("feather_renamed/", questionnaire, ".feather")
-    feather_path <- paste0(dirpath, feather_name)
-    write_feather(data_easyname_bin, path = feather_path)
   } else {
-    data_cleaned_csv <- to_csv(data_cleaned, data_raw)
-    data_cleaned_bin <- add_numeric(data_cleaned, data_raw)
+    dirpath <- paste0(dirpath, format)
+    dir.create(dirpath, showWarnings = FALSE)
+  }
 
-    csv_name <- paste0("csv/", questionnaire, ".csv")
-    csv_path <- paste0(dirpath, csv_name)
-    write_csv(x = data_cleaned_csv, path = csv_path)
+  name <- paste0(questionnaire, ".", format)
+  path <- file.path(dirpath, name)
 
-    rds_name <- paste0("rds/", questionnaire, ".rds")
-    rds_path <- paste0(dirpath, rds_name)
-    saveRDS(data_cleaned_bin, file = rds_path)
-
-    feather_name <- paste0("feather/", questionnaire, ".feather")
-    feather_path <- paste0(dirpath, feather_name)
-    write_feather(data_cleaned_bin, path = feather_path)
+  if (format %in% c("rds", "feather")) {
+    to_binary(data_cleaned, data_raw, format = format, path)
+  }
+  if (format %in% c("dta", "sas", "sav")) {
+    to_haven(data_cleaned, format = format, path)
+  }
+  if (format == "csv") {
+    to_csv(data_cleaned, data_raw, path)
   }
 }

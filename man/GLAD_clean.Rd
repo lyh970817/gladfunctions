@@ -4,7 +4,14 @@
 \alias{GLAD_clean}
 \title{Cleans Questionnaires}
 \usage{
-GLAD_clean(questionnaire, dat_list, path, limits = TRUE)
+GLAD_clean(
+  questionnaire,
+  dat_list,
+  path,
+  limits = TRUE,
+  rename = TRUE,
+  format = "feather"
+)
 }
 \arguments{
 \item{questionnaire}{A character string indicating what questionnaire to
@@ -15,6 +22,13 @@ it's "All", all questionnaires in 'dat_list' are cleaned.}
 
 \item{limits}{A logical indicating whether limits (min and max) are to
 be applied}
+
+\item{rename}{A logical. TRUE if the variables are to be renamed to
+`Easy.name`.}
+
+\item{format}{A character string. It should be one of c("feather",
+"rds", "sav", "dta", "sas")
+#' @export}
 }
 \description{
 Cleans all questionnaires or one specified questionnaire in 'dat_list'

@@ -69,12 +69,12 @@ select_vars <- function(questionnaire, data_raw, sheet) {
   return(vars)
 }
 
-questionnaire_clean <- function(questionnaire, data_raw, path, limits) {
+questionnaire_clean <- function(questionnaire, data_raw, path, limits, rename, format) {
   sheet <- GLAD_sheet(questionnaire)[[1]]
   vars <- select_vars(questionnaire, data_raw, sheet)
   data_raw <- data_raw %>%
     mutate(
-      Sex = factor(DEM.SEX.1.0, levels = c(0, 1), labels = c("Male", "Female")),
+      Sex = lfactor(DEM.SEX.1.0, levels = c(0, 1), labels = c("Male", "Female")),
       Age = DEM.AGE.1.0,
       # The birthyear exported by Qualtrics has two-digit format.
       Birthyear = DEM.DOB.3.0 + 1900
@@ -94,18 +94,10 @@ questionnaire_clean <- function(questionnaire, data_raw, path, limits) {
   data_cleaned <- data_raw %>%
     GLAD_recode_df(googlesheet = sheet, limits = TRUE)
 
-  # This exports New.variable name files.
   GLAD_export(data_cleaned, data_raw,
     questionnaire = questionnaire,
     dirpath = path, googlesheet = sheet,
-    rename = FALSE
-  )
-
-  # This exports Easy.name files.
-  GLAD_export(data_cleaned, data_raw,
-    questionnaire = questionnaire,
-    dirpath = path, googlesheet = sheet,
-    rename = TRUE
+    format, rename
   )
 }
 
@@ -128,14 +120,18 @@ questionnaire_clean <- function(questionnaire, data_raw, path, limits) {
 #' @param dat_list A named list of dataframes produced by 'GLAD_read'.
 #' @param limits A logical indicating whether limits (min and max) are to
 #' be applied
-#' @export
-GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE) {
+#' @param rename A logical. TRUE if the variables are to be renamed to
+#' `Easy.name`.
+#' @param format A character string. It should be one of c("feather",
+#' "rds", "sav", "dta", "sas")
+#' #' @export
+GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TRUE, format = "feather") {
   # We always need "DEM" to extract "Sex", "Age" and "Birthyear"
   dem <- dat_list[["DEM"]]
   if (questionnaire %in% sign_up) {
     # If the questionnaire is in sign-up hence in "DEM",
     # we already have "Sex", "Age" and "Birthyear" in the same file.
-    try(questionnaire_clean(questionnaire, dem, path, limits))
+    try(questionnaire_clean(questionnaire, dem, path, limits, rename, format))
   } else if (questionnaire %in% c("NES", "MDDI")) {
     try(dat_list[["ED"]] %>%
       left_join(dem[
@@ -148,7 +144,7 @@ GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE) {
       ],
       by = "ExternalReference"
       ) %>%
-      questionnaire_clean(questionnaire, ., path, limits))
+      questionnaire_clean(questionnaire, ., path, limits, rename, format))
   }
   else if (questionnaire %in% names(dat_list)) {
     # if the questionnaire is not in sign-up we need to merge it with
@@ -164,7 +160,7 @@ GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE) {
       ],
       by = "ExternalReference"
       ) %>%
-      questionnaire_clean(questionnaire, ., path, limits))
+      questionnaire_clean(questionnaire, ., path, limits, rename, format))
   } else if (questionnaire == "All") {
     GLAD_cleanall(dat_list, path, limits)
   }
@@ -172,6 +168,6 @@ GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE) {
 
 GLAD_cleanall <- function(dat_list, path, limits = TRUE) {
   for (q in questionnaires) {
-    GLAD_clean(q, dat_list, path, limits)
+    GLAD_clean(q, dat_list, path, limits, rename, format)
   }
 }

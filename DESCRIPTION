@@ -26,7 +26,8 @@ Imports:
     ggrepel,
     psych,
     car,
-    feather
+    feather,
+    haven
 RoxygenNote: 7.1.0
 Suggests:
     knitr,
