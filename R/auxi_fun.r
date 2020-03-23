@@ -1,3 +1,4 @@
+library(tidyverse)
 #' @importFrom magrittr %>%
 #' @import ggplot2
 #' @import knitr
@@ -11,11 +12,12 @@
 #' @importFrom psych scoreItems
 #' @importFrom stats fligner.test bartlett.test
 #' @importFrom car leveneTest
-#' @importFrom haven labelled write_sav write_sas write_dta
+#' @importFrom haven labelled write_sav write_sas write_dta read_sav
+#' read_sas read_dta
 #' @importFrom readr write_csv read_csv
 #' @importFrom googlesheets4 read_sheet sheets_sheets
 #' @importFrom summarytools descr tb freq
-#' @importFrom feather write_feather
+#' @importFrom feather write_feather feather
 #' @import ggformula
 #' @import lfactors
 
@@ -135,12 +137,22 @@ get_selected <- function(data, which, googlesheet) {
 #' to a list
 #'
 #' @param clean_path Path to the folder containing the  exported files.
-#' @param which A character vector specifying paths to the *.txt files containing required variables. Each
-#' text file should correspond to and has the name of a questionnaire. The
-#' variables within each text file should be on seperate lines.
-#' @return A list of data frames
+#' @param export_path Path to export the data with selected variables to.
+#' @param which A character vector specifying paths to the *.txt files
+#' containing required variables. Each text file should correspond to and
+#' has the name of a questionnaire. The variables within each text file
+#' should be on seperate lines.
+#' @param format Format of exported data. It should be one of c('rds',
+#' 'sav', 'sas', 'feather', 'csv')
 #' @export
-GLAD_select <- function(clean_path, which) {
+GLAD_select <- function(clean_path, export_path, which, format) {
+  if (length(format) > 1) {
+    stop("Only one format allowed.")
+  }
+  if (!format %in% c("rds", "sav", "sas", "feather", "csv")) {
+    stop("format must be one of c('rds', 'sav', 'sas', 'feather', 'csv')")
+  }
+
   questionnaires <- str_split(which, boundary("word")) %>%
     map_chr(nth, -1) %>%
     str_extract("[A-Z]*")
@@ -148,8 +160,19 @@ GLAD_select <- function(clean_path, which) {
   names(which) <- questionnaires
   select_list <- map2(questionnaires, sheets, function(q, s) {
     vars <- readLines(which[q])
-    dat <- readRDS(file.path(clean_path, "rds_renamed", paste0(q, "_Renamed.rds")))
+    if (format == "rds") dat <- readRDS(paste0(clean_path, "rds_renamed/", paste0(q, "_Renamed.rds")))
+    if (format == "feather") dat <- feather(paste0(clean_path, "feather_renamed/", paste0(q, "_Renamed.feather")))
+    if (format == "dta") dat <- read_dta(paste0(clean_path, "dta_renamed/", paste0(q, "_Renamed.dta")))
+    if (format == "sav") dat <- read_sav(paste0(clean_path, "sav_renamed/", paste0(q, "_Renamed.sav")))
+    if (format == "sas") dat <- read_sas(paste0(clean_path, "sas_renamed/", paste0(q, "_Renamed.sas")))
     selected_dat <- get_selected(dat, vars, s)
   }) %>% setNames(questionnaires)
-  return(select_list)
+
+  for (i in seq_along(select_list)) {
+    if (format == "rds") saveRDS(select_list[[i]], paste0(export_path, questionnaires[i], ".rds"))
+    if (format == "feather") write_feather(select_list[[i]], paste0(export_path, questionnaires[i], ".feather"))
+    if (format == "dta") write_dta(select_list[[i]], paste0(export_path, questionnaires[i], ".dta"))
+    if (format == "sav") write_sav(select_list[[i]], paste0(export_path, questionnaires[i], ".sav"))
+    if (format == "sas") write_sas(select_list[[i]], paste0(export_path, questionnaires[i], ".sas"))
+  }
 }

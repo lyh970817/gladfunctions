@@ -131,22 +131,15 @@ GLAD_clean("All", dat_list, clean_path, limits = FALSE, rename = TRUE, format = 
 GLAD_clean("CIDID", dat_list, clean_path, limits = FALSE, rename = TRUE, format = "rds")
 ```
 
-(Sorry I am being stupid - I should have the argument here, not in the
-above function. But if we're not selecting variables that would work for
-now,  and this chunk should not be touched)
-
 * Select variables to export with text files containing the `Easy.name`s.
   Each text file should have the name of and correspond to a questionnaire.
   Each variable name within the text file should be in a seperate line.
 
-* People might request different data formats. Use `write_feather` from the
-  `feather` package for Python users or `write_sav`, `write_sas` and
-  `write_dta` from the `haven` package respectively for SPSS/JASP, SAS and
-  Stata users.
-
 ```{r select variables, eval = FALSE}
-selected_list <- GLAD_select(clean_path, c("DEM.txt", "PAD.txt"))
-saveRDS(selected_list[[1]], "./DEM.rds")
+selected_list <- GLAD_select(clean_path,
+  export_path = "./",
+  c("DEM.txt", "PAD.txt"), format = "sav"
+)
 ```
 
 ## Read in data file and dictionary sheet

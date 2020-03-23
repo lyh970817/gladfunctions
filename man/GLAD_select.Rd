@@ -4,14 +4,15 @@
 \alias{GLAD_select}
 \title{Read in Selected Variables From Data sets to a list}
 \usage{
-GLAD_select(clean_path, which)
+GLAD_select(clean_path, export_path, which, format)
 }
 \arguments{
 \item{clean_path}{Path to the folder containing the  exported files.}
 
-\item{which}{A character vector specifying paths to the *.txt files containing required variables. Each
-text file should correspond to and has the name of a questionnaire. The
-variables within each text file should be on seperate lines.}
+\item{which}{A character vector specifying paths to the *.txt files
+containing required variables. Each text file should correspond to and
+has the name of a questionnaire. The variables within each text file
+should be on seperate lines.}
 }
 \value{
 A list of data frames
