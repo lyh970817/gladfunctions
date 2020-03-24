@@ -16,6 +16,11 @@ GLAD_sheet_scal <- function(questionnaire) {
       type = Type
     ) %>%
     (function(x) {
+      if ("GLAD.t0" %in% colnames(x)) {
+        x <- rename(x, GLAD.t0 = GLAD.t0)
+      } else {
+        message("Score.key is not in ", questionnaire)
+      }
       if ("Score.key" %in% colnames(x)) {
         x <- rename(x, score_key = Score.key)
       } else {

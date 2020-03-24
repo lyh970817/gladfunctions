@@ -127,6 +127,19 @@ GLAD_clean("All", dat_list, clean_path, limits = FALSE, rename = TRUE, format = 
 
 * Clean a specified questionnaire and export to `clean_path`
 
+  - On calling the function you will be prompted with a Google login page,
+    after you agree for the credential file to be created. Please log in
+    with an account that would allow you access to the GLAD dictionary.
+
+   - Click "Allow" to grant permission to the Tidyverse API Packages.
+
+   - "Click allow for the Tidyverse API Package to see, edit and delete
+     your spreadsheets in Google Drive"
+
+   - This will prompt you to enter a code. Please copy the code from the
+     Google sign in and paste this where is says "Enter authorization
+     code:" in your R console.
+
 ```{r clean specified questionnaire, eval = FALSE}
 GLAD_clean("CIDID", dat_list, clean_path, limits = FALSE, rename = TRUE, format = "rds")
 ```
@@ -155,12 +168,12 @@ GLAD_select(clean_path,
 PAD <-
   readRDS(paste(clean_path, "rds_renamed/PAD_Renamed.rds", sep = "/"))
 
-# `GLAD_sheet` is a vectorised function (vectorised functions take a vector
-# and operate on all the items in a vector). This means that we can read in
-# multiple sheets at once and store them in a list.
+`GLAD_sheet` is a vectorised function (vectorised functions take a vector
+and operate on all the items in a vector). This means that we can read in
+multiple sheets at once and store them in a list.
 
-# We need to use [[1]] (with double square brackets) to extract the first
-# element of an R list list.
+We need to use [[1]] (with double square brackets) to extract the first
+element of an R list list.
 
 sheet <- GLAD_sheet("PAD")[[1]]
 ```

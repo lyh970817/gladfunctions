@@ -63,8 +63,9 @@ select_vars <- function(questionnaire, data_raw, sheet) {
   # Find variables that have Qulatrics.derived.variables and Derived.variables
   # in "Comments"
   not_derived <- !grepl("[Dd]erived", sheet[["Comments"]])
+  in_glad <- which(!is.na(sheet[["GLAD.t0"]]))
   # Select only variables that are in the dataframe.
-  vars <- sheet_vars[which(sheet_vars %in% colnames(data_raw) & not_derived)]
+  vars <- sheet_vars[which(sheet_vars %in% colnames(data_raw) & not_derived & in_glad)]
 
   return(vars)
 }
