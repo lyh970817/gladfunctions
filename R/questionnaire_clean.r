@@ -129,6 +129,7 @@ questionnaire_clean <- function(questionnaire, data_raw, path, limits, rename, f
 GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TRUE, format = "feather") {
   # We always need "DEM" to extract "Sex", "Age" and "Birthyear"
   dem <- dat_list[["DEM"]]
+
   if (questionnaire %in% sign_up) {
     # If the questionnaire is in sign-up hence in "DEM",
     # we already have "Sex", "Age" and "Birthyear" in the same file.
