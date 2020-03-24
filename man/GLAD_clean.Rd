@@ -27,8 +27,7 @@ be applied}
 `Easy.name`.}
 
 \item{format}{A character string. It should be one of c("feather",
-"rds", "sav", "dta", "sas")
-#' @export}
+"rds", "sav", "dta", "sas")}
 }
 \description{
 Cleans all questionnaires or one specified questionnaire in 'dat_list'

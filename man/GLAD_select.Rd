@@ -9,13 +9,15 @@ GLAD_select(clean_path, export_path, which, format)
 \arguments{
 \item{clean_path}{Path to the folder containing the  exported files.}
 
+\item{export_path}{Path to export the data with selected variables to.}
+
 \item{which}{A character vector specifying paths to the *.txt files
 containing required variables. Each text file should correspond to and
 has the name of a questionnaire. The variables within each text file
 should be on seperate lines.}
-}
-\value{
-A list of data frames
+
+\item{format}{Format of exported data. It should be one of c('rds',
+'sav', 'sas', 'feather', 'csv')}
 }
 \description{
 Read in selected variables specified through *.txt files from data sets
