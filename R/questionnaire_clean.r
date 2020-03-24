@@ -125,7 +125,7 @@ questionnaire_clean <- function(questionnaire, data_raw, path, limits, rename, f
 #' `Easy.name`.
 #' @param format A character string. It should be one of c("feather",
 #' "rds", "sav", "dta", "sas")
-#' #' @export
+#' @export
 GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TRUE, format = "feather") {
   # We always need "DEM" to extract "Sex", "Age" and "Birthyear"
   dem <- dat_list[["DEM"]]
