@@ -42,8 +42,11 @@ select_vars <- function(questionnaire, data_raw, sheet) {
   # They correponds to column names of a data set.
   sheet_vars <- sheet[["oldvar"]]
 
-  # What variables are in the dictionay but not in the data frame?
-  morevars <- sheet_vars[which(!sheet_vars %in% colnames(data_raw))] %>%
+  in_glad <- !is.na(sheet[["GLAD.t0"]])
+
+  # What variables are in the dictionay but not in the data frame but have
+  # GLAD.t0
+  morevars <- sheet_vars[which((!sheet_vars %in% colnames(data_raw)) & in_glad)] %>%
     unique()
   if (length(morevars[!is.na(morevars)]) > 0) {
     # One per row
@@ -63,7 +66,6 @@ select_vars <- function(questionnaire, data_raw, sheet) {
   # Find variables that have Qulatrics.derived.variables and Derived.variables
   # in "Comments"
   not_derived <- !grepl("[Dd]erived", sheet[["Comments"]])
-  in_glad <- which(!is.na(sheet[["GLAD.t0"]]))
   # Select only variables that are in the dataframe.
   vars <- sheet_vars[which(sheet_vars %in% colnames(data_raw) & not_derived & in_glad)]
 
@@ -115,6 +117,16 @@ questionnaire_clean <- function(questionnaire, data_raw, path, limits, rename, f
 #' version of export files: RDS and CSV files with `New.variable` names,
 #' and RDS and CSV files with `Easy.name` names.
 #'
+#' @param questionnaire A character string indicating what questionnaire to
+#' clean by its acronym. The questionnaire data must be in 'dat_list'.If
+#' it's "All", all questionnaires in 'dat_list' are cleaned.
+#' @param dat_list A named list of dataframes produced by 'GLAD_read'.
+#' @param limits A logical indicating whether limits (min and max) are to
+#' be applied
+#' @param rename A logical. TRUE if the variables are to be renamed to
+#' `Easy.name`.
+#' @param format A character string. It should be one of c("feather",
+#' "rds", "sav", "dta", "sas")
 #' @export
 GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TRUE, format = "feather") {
   # We always need "DEM" to extract "Sex", "Age" and "Birthyear"
