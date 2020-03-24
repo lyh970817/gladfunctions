@@ -41,13 +41,13 @@ select_vars <- function(questionnaire, data_raw, sheet) {
   # "oldvar" are variables names Qualtrics raw files have.
   # They correponds to column names of a data set.
   sheet_vars <- sheet[["oldvar"]]
-
   in_glad <- !is.na(sheet[["GLAD.t0"]])
 
   # What variables are in the dictionay but not in the data frame but have
   # GLAD.t0
   morevars <- sheet_vars[which((!sheet_vars %in% colnames(data_raw)) & in_glad)] %>%
     unique()
+
   if (length(morevars[!is.na(morevars)]) > 0) {
     # One per row
     morevars_str <- paste(morevars, collapse = ", ")
