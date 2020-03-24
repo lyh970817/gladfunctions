@@ -13,22 +13,6 @@ GLAD_clean(
   format = "feather"
 )
 }
-\arguments{
-\item{questionnaire}{A character string indicating what questionnaire to
-clean by its acronym. The questionnaire data must be in 'dat_list'.If
-it's "All", all questionnaires in 'dat_list' are cleaned.}
-
-\item{dat_list}{A named list of dataframes produced by 'GLAD_read'.}
-
-\item{limits}{A logical indicating whether limits (min and max) are to
-be applied}
-
-\item{rename}{A logical. TRUE if the variables are to be renamed to
-`Easy.name`.}
-
-\item{format}{A character string. It should be one of c("feather",
-"rds", "sav", "dta", "sas")}
-}
 \description{
 Cleans all questionnaires or one specified questionnaire in 'dat_list'
 and creates exports.

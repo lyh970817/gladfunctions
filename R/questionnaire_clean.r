@@ -115,16 +115,6 @@ questionnaire_clean <- function(questionnaire, data_raw, path, limits, rename, f
 #' version of export files: RDS and CSV files with `New.variable` names,
 #' and RDS and CSV files with `Easy.name` names.
 #'
-#' @param questionnaire A character string indicating what questionnaire to
-#' clean by its acronym. The questionnaire data must be in 'dat_list'.If
-#' it's "All", all questionnaires in 'dat_list' are cleaned.
-#' @param dat_list A named list of dataframes produced by 'GLAD_read'.
-#' @param limits A logical indicating whether limits (min and max) are to
-#' be applied
-#' @param rename A logical. TRUE if the variables are to be renamed to
-#' `Easy.name`.
-#' @param format A character string. It should be one of c("feather",
-#' "rds", "sav", "dta", "sas")
 #' @export
 GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TRUE, format = "feather") {
   # We always need "DEM" to extract "Sex", "Age" and "Birthyear"
