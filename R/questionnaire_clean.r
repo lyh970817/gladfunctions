@@ -68,7 +68,6 @@ select_vars <- function(questionnaire, data_raw, sheet) {
   not_derived <- !grepl("[Dd]erived", sheet[["Comments"]])
   # Select only variables that are in the dataframe.
   vars <- sheet_vars[which(sheet_vars %in% colnames(data_raw) & not_derived & in_glad)]
-
   return(vars)
 }
 

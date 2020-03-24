@@ -1,6 +1,7 @@
 test_nonames <- function(sheet, pos, from = "oldvar", to = "newvar") {
   # Test if there is a one-to-one mapping between Qualtrics.variable nad
   # New.variable, and between New.variable and Easy.name.
+
   oldvar <- sheet[[from]][pos]
   newvar <- sheet[[to]][pos]
 
@@ -57,6 +58,9 @@ test_nonames <- function(sheet, pos, from = "oldvar", to = "newvar") {
 }
 
 GLAD_rename <- function(data, googlesheet, from = "oldvar", to = "newvar") {
+  in_glad_oldvar <- googlesheet[[from]][!is.na(googlesheet[["GLAD.t0"]])]
+  in_glad_newvar <- googlesheet[[to]][!is.na(googlesheet[["GLAD.t0"]])]
+
   oldvar <- googlesheet[[from]]
   newvar <- googlesheet[[to]]
 
@@ -82,6 +86,8 @@ GLAD_rename <- function(data, googlesheet, from = "oldvar", to = "newvar") {
       googlesheet[["Comments"]]
     )] %>%
     subset(!is.na(.))
+
+  nonames <- nonames[nonames %in% in_glad_oldvar]
 
   if (length(nonames) > 0) {
     message(paste(
