@@ -170,11 +170,11 @@ GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TR
       ) %>%
       questionnaire_clean(questionnaire, ., path, limits, rename, format))
   } else if (questionnaire == "All") {
-    GLAD_cleanall(dat_list, path, limits)
+    GLAD_cleanall(dat_list, path, limits, rename, format)
   }
 }
 
-GLAD_cleanall <- function(dat_list, path, limits = TRUE) {
+GLAD_cleanall <- function(dat_list, path, limits, rename, format) {
   for (q in questionnaires) {
     GLAD_clean(q, dat_list, path, limits, rename, format)
   }
