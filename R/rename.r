@@ -84,7 +84,7 @@ GLAD_rename <- function(data, googlesheet, from = "oldvar", to = "newvar") {
     oldvar[is.na(newvar) & !grepl(
       "[Dd]erived",
       googlesheet[["Comments"]]
-    )] %>%
+    ) & !is.na(googlesheet[["GLAD.t0"]])] %>%
     subset(!is.na(.))
 
   nonames <- nonames[nonames %in% in_glad_oldvar]
