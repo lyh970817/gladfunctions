@@ -110,24 +110,13 @@ GLAD_getdescr_scal <- function(which, googlesheet) {
 GLAD_getdescr <- Vectorize(GLAD_getdescr_scal, vectorize.args = "which")
 
 get_selected <- function(data, which, googlesheet) {
-  if (any(colnames(data) %in% googlesheet[["newvar"]])) {
-    # The specified names (which) are always easy names.
-    items <- googlesheet[["newvar"]][googlesheet[["easyname"]] %in% which]
-    items_num <- paste(items, "numeric", sep = ".")
-    items_all <- c(items, items_num)
-    return(bind_cols(
-      data[c("ID", "Sex", "Age", "Birthyear")],
-      data[colnames(data) %in% items_all]
-    ))
-  }
-  if (any(colnames(data) %in% googlesheet[["easyname"]])) {
-    items_num <- paste(which, "numeric", sep = ".")
-    items_all <- c(which, items_num)
-    return(bind_cols(
-      data[c("ID", "Sex", "Age", "Birthyear")],
-      data[colnames(data) %in% items_all]
-    ))
-  }
+  items_num <- paste(which, "numeric", sep = "_")
+  items_all <- c(which, items_num)
+
+  return(bind_cols(
+    data[c("ID", "Sex", "Age", "Birthyear")],
+    data[colnames(data) %in% items_all]
+  ))
 }
 
 #' Read in Selected Variables From Data sets to a list
@@ -136,7 +125,9 @@ get_selected <- function(data, which, googlesheet) {
 #' to a list
 #'
 #' @param clean_path Path to the folder containing the  exported files.
-#' @param export_path Path to export the data with selected variables to.
+#' @param export_path Path to the data request folder, which should contain
+#' subfolders each represent a person who requests the data
+#' @param person The name of the person who requests the data
 #' @param which A character vector specifying paths to the *.txt files
 #' containing required variables. Each text file should correspond to and
 #' has the name of a questionnaire. The variables within each text file
@@ -144,7 +135,7 @@ get_selected <- function(data, which, googlesheet) {
 #' @param format Format of exported data. It should be one of c('rds',
 #' 'sav', 'sas', 'feather', 'csv')
 #' @export
-GLAD_select <- function(clean_path, export_path, which, format) {
+GLAD_select <- function(clean_path, export_path, person, which, format) {
   if (length(format) > 1) {
     stop("Only one format allowed.")
   }
@@ -167,11 +158,15 @@ GLAD_select <- function(clean_path, export_path, which, format) {
     selected_dat <- get_selected(dat, vars, s)
   }) %>% setNames(questionnaires)
 
+  time <- format(Sys.time(), "%B-%d-%Y")
+  dir <- paste0(export_path, person, "-", time, "/")
+  dir.create(dir)
+
   for (i in seq_along(select_list)) {
-    if (format == "rds") saveRDS(select_list[[i]], paste0(export_path, questionnaires[i], ".rds"))
-    if (format == "feather") write_feather(select_list[[i]], paste0(export_path, questionnaires[i], ".feather"))
-    if (format == "dta") write_dta(select_list[[i]], paste0(export_path, questionnaires[i], ".dta"))
-    if (format == "sav") write_sav(select_list[[i]], paste0(export_path, questionnaires[i], ".sav"))
-    if (format == "sas") write_sas(select_list[[i]], paste0(export_path, questionnaires[i], ".sas"))
+    if (format == "rds") saveRDS(select_list[[i]], paste0(dir, questionnaires[i], ".rds"))
+    if (format == "feather") write_feather(select_list[[i]], paste0(dir, questionnaires[i], ".feather"))
+    if (format == "dta") write_dta(select_list[[i]], paste0(dir, uestionnaires[i], ".dta"))
+    if (format == "sav") write_sav(select_list[[i]], paste0(dir, questionnaires[i], ".sav"))
+    if (format == "sas") write_sas(select_list[[i]], paste0(dir, questionnaires[i], ".sas"))
   }
 }

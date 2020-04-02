@@ -93,7 +93,7 @@ questionnaire_clean <- function(questionnaire, data_raw, path, limits, rename, f
       Birthyear,
       vars
     ) %>%
-    filter(!is_rowna(.)) %>%
+    filter(!is_rowna(.[5:ncol(.)])) %>%
     GLAD_removedup() %>%
     GLAD_removehead(sheet) %>%
     .[complete.cases(.[["Sex"]]), ]
