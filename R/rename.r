@@ -2,6 +2,9 @@ test_nonames <- function(sheet, pos, from = "oldvar", to = "newvar") {
   # Test if there is a one-to-one mapping between Qualtrics.variable nad
   # New.variable, and between New.variable and Easy.name.
 
+  # Need to completely rewrite this function. Use the function in my
+  # iteration r bootcamp session
+
   oldvar <- sheet[[from]][pos]
   newvar <- sheet[[to]][pos]
 

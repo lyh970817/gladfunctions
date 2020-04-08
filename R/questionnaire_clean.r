@@ -133,6 +133,10 @@ questionnaire_clean <- function(questionnaire, data_raw, path, limits, rename, f
 #' "rds", "sav", "dta", "sas")
 #' @export
 GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TRUE, format = "feather") {
+  if (length(dat_list) == 0) {
+    stop("You have not read in the data files.")
+  }
+
   # We always need "DEM" to extract "Sex", "Age" and "Birthyear"
   dem <- dat_list[["DEM"]]
 
@@ -170,6 +174,10 @@ GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TR
       ) %>%
       questionnaire_clean(questionnaire, ., path, limits, rename, format))
   } else if (questionnaire == "All") {
+    all_names <- c("DEM", setdiff(questionnaires, sign_up))
+    if (all_names == names(dat_list)) {
+      stop("You have not read in data for all questionnaires")
+    }
     GLAD_cleanall(dat_list, path, limits, rename, format)
   }
 }
