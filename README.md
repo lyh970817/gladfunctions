@@ -28,7 +28,9 @@ devtools::install_github("lyh970817/gladfunctions")
 
 * Specifying limits for plots - useful for `include_outlier` examination
 
-* Using text files named after questionnaire names containing variable lists to select variables
+* Using text files named after questionnaires containing variable lists for selection
+
+* Create person data request record directory
 
 # Overview
 

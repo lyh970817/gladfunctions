@@ -110,6 +110,10 @@ GLAD_getdescr_scal <- function(which, googlesheet) {
 GLAD_getdescr <- Vectorize(GLAD_getdescr_scal, vectorize.args = "which")
 
 get_selected <- function(data, which, googlesheet) {
+  if (length(which) == 0) {
+    return(data)
+  }
+
   items_num <- paste(which, "numeric", sep = "_")
   items_all <- c(which, items_num)
 
