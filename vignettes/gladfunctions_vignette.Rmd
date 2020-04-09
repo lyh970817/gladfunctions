@@ -145,8 +145,9 @@ GLAD_clean("CIDID", dat_list, clean_path, limits = FALSE, rename = TRUE, format 
 ```
 
 * Select variables to export with text files containing the `Easy.name`s.
-  Each text file should have the name of and correspond to a questionnaire.
-  Each variable name within the text file should be in a seperate line.
+  Each text file should be named as the acronym of a questionnaire (as in
+  the dictionary tabs). Each variable name within the text file should be
+  in a seperate line.
 
   An empty text file with the questionnaire name will export all variables
   in that questionnaire.

@@ -97,6 +97,7 @@ GLAD_export <- function(data_cleaned, data_raw, questionnaire, dirpath, googlesh
     dir.create(dirpath, showWarnings = FALSE)
   }
 
+  data_cleaned <- GLAD_derive(data_cleaned, googlesheet)
   name <- paste0(questionnaire, ".", format)
   path <- file.path(dirpath, name)
 
