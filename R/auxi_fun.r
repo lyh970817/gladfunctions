@@ -160,14 +160,18 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
     if (format == "dta") dat <- read_dta(paste0(clean_path, "dta_renamed/", paste0(q, "_Renamed.dta")))
     if (format == "sav") dat <- read_sav(paste0(clean_path, "sav_renamed/", paste0(q, "_Renamed.sav")))
     if (format == "sas") dat <- read_sas(paste0(clean_path, "sas_renamed/", paste0(q, "_Renamed.sas")))
-    selected_dat <- get_selected(dat, vars, s)
+    GLAD_derive(dat, s) %>%
+      get_selected(vars, s)
   }) %>% setNames(questionnaires)
 
-  time <- format(Sys.time(), "%B-%d-%Y")
+  time <- format(Sys.time(), "%m-%d-%Y")
   dir <- paste0(export_path, person, "-", time, "/")
-  dir.create(dir)
+  dir.create(dir, showWarnings = FALSE)
 
-  file.copy(which, dir)
+  dir_text <- paste0(dir, "variables_selected/")
+  dir.create(dir_text, showWarnings = FALSE)
+
+  file.copy(which, dir_text)
 
   for (i in seq_along(select_list)) {
     if (format == "rds") saveRDS(select_list[[i]], paste0(dir, questionnaires[i], ".rds"))

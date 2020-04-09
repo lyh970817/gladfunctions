@@ -51,10 +51,17 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
 
   if (length(all_keys) >= 1) {
     if (!any(formulae == questionnaire, na.rm = T)) {
-      message(questionnaire, " has no total score formula.")
     } else {
       total_score_name <- vars[which(formulae == questionnaire)]
-      data[total_score_name] <- get_score(all_keys, data_items)
+
+      data[total_score_name] <- tryCatch(
+        get_score(all_keys, data_items),
+        error = function(cond) {
+          message("An error has occurred when scoring variable ", total_score_name)
+          message(cond)
+          return(NULL)
+        }
+      )
     }
   }
 
@@ -69,8 +76,15 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
       data_subitems <- data_items[sub_items]
       sub_keys <- get_keys(sub_items, googlesheet)
       sub_score_name <- vars[which(googlesheet[["formula"]] == subscale)]
-      data[sub_score_name] <-
-        get_score(sub_keys, data_subitems)
+
+      data[sub_score_name] <- tryCatch(
+        get_score(sub_keys, data_subitems),
+        error = function(cond) {
+          message("An error has occurred when scoring variable ", sub_score_name)
+          message(cond)
+          return(NULL)
+        }
+      )
     }
   }
   if (is_newvar) {
@@ -99,11 +113,25 @@ GLAD_formula <- function(data, googlesheet, questionnaire) {
     !googlesheet[["formula"]] %in% unique(googlesheet[["subscale"]])
 
   derive_vars <- vars[derive_where]
-
   for (dv in derive_vars) {
-    formula <- sheet_extract("formula", dv, googlesheet) %>%
-      parse(text = .)
-    data[dv] <- with(data, eval(formula))
+    formula <- tryCatch(
+      sheet_extract("formula", dv, googlesheet) %>%
+        parse(text = .),
+      error = function(cond) {
+        message("An error has occurred when deriving variable ", dv)
+        message(paste0(cond))
+        return(NULL)
+      }
+    )
+
+    data[dv] <- tryCatch(
+      with(data, eval(formula)),
+      error = function(cond) {
+        message("An error has occurred when deriving variable ", dv)
+        message(paste0(cond))
+        return(NULL)
+      }
+    )
   }
   # If we've done the renaming, rename it back.
   if (is_newvar) {
