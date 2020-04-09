@@ -16,7 +16,6 @@ GLAD_missing_freq <- function(data) {
     scroll_box(width = "100%", height = "300px")
 }
 
-
 GLAD_missing_plot <- function(data) {
   missing_plot <- ggplot(
     data = data,

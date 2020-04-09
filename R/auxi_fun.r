@@ -81,7 +81,8 @@ get_categvars <- function(var, googlesheet) {
 }
 
 get_questionnaire <- function(googlesheet) {
-  # Get the name of the questionnaire
+  # This is to be changed. Use parent frame to emulate dynamic scoping Get
+  # the name of the questionnaire
   questionnaire <- str_split(
     googlesheet[["newvar"]],
     "\\."
@@ -165,6 +166,8 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
   time <- format(Sys.time(), "%B-%d-%Y")
   dir <- paste0(export_path, person, "-", time, "/")
   dir.create(dir)
+
+  file.copy(which, dir)
 
   for (i in seq_along(select_list)) {
     if (format == "rds") saveRDS(select_list[[i]], paste0(dir, questionnaires[i], ".rds"))
