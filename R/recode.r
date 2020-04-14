@@ -106,9 +106,9 @@ GLAD_recode <- function(x, var, googlesheet, limits) {
     # question that allow multiple options to be selected, the response is automatically
     # exported as -99, but this might not be in the dictionary.
 
-    if (!-99 %in% levels) {
-      levels <- c(levels, -99)
-      labels <- c(labels, "Prefer not to say")
+    if (!-77 %in% levels) {
+      levels <- c(levels, -77)
+      labels <- c(labels, "Seen but not answered")
     }
 
     # If any level is not appropriate we leave the variable unchanged.
