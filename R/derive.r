@@ -57,7 +57,7 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
       data[total_score_name] <- tryCatch(
         get_score(all_keys, data_items),
         error = function(cond) {
-          message("An error has occurred when scoring variable ", total_score_name)
+          message("An error has occurred when scoring variable ", paste0("'", total_score_name, "'"))
           message(cond)
           return(NULL)
         }
@@ -80,7 +80,7 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
       data[sub_score_name] <- tryCatch(
         get_score(sub_keys, data_subitems),
         error = function(cond) {
-          message("An error has occurred when scoring variable ", sub_score_name)
+          message("An error has occurred when scoring variable ", paste0("'", sub_score_name, "'"))
           message(cond)
           return(NULL)
         }
@@ -118,7 +118,7 @@ GLAD_formula <- function(data, googlesheet, questionnaire) {
       sheet_extract("formula", dv, googlesheet) %>%
         parse(text = .),
       error = function(cond) {
-        message("An error has occurred when deriving variable ", dv)
+        message("An error has occurred when deriving variable ", paste0("'", dv, "'"))
         message(paste0(cond))
         return(NULL)
       }
@@ -127,7 +127,7 @@ GLAD_formula <- function(data, googlesheet, questionnaire) {
     data[dv] <- tryCatch(
       with(data, eval(formula)),
       error = function(cond) {
-        message("An error has occurred when deriving variable ", dv)
+        message("An error has occurred when deriving variable ", paste0("'", dv, "'"))
         message(paste0(cond))
         return(NULL)
       }
