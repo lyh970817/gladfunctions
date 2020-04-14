@@ -64,7 +64,7 @@ check_levels <- function(levels, labels, x, var) {
     ))
     return(FALSE)
   }
-  if (length(unique((levels)) != length(unique(labels))) {
+  if (length(unique(levels)) != length(unique(labels))) {
     message(var, " does not have levels and labels of the same length.")
     return(FALSE)
   }
