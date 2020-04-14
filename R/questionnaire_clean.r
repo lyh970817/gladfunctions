@@ -173,13 +173,14 @@ GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TR
       by = "ExternalReference"
       ) %>%
       questionnaire_clean(questionnaire, ., path, limits, rename, format))
-  } else if (questionnaire == "All") {
-    all_names <- c("DEM", setdiff(questionnaires, sign_up))
-    if (!all.equal(all_names, names(dat_list))) {
-      stop("You have not read in data for all questionnaires")
-    }
-    GLAD_cleanall(dat_list, path, limits, rename, format)
   }
+  # else if (questionnaire == "All") {
+  #   all_names <- c("DEM", setdiff(questionnaires, sign_up))
+  #   if (!identical(sort(all_names), sort(names(dat_list)))) {
+  #     stop("You have not read in data for all questionnaires")
+  #   }
+  #   GLAD_cleanall(dat_list, path, limits, rename, format)
+  # }
 }
 
 GLAD_cleanall <- function(dat_list, path, limits, rename, format) {
