@@ -192,4 +192,3 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
     if (format == "sas") write_sas(select_list[[i]], paste0(dir, questionnaires[i], ".sas"))
   }
 }
-
