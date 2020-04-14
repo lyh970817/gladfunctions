@@ -26,7 +26,7 @@ devtools::install_github("lyh970817/gladfunctions")
 
 * Put negative to positive for all continuous variables in recoding
 
-* Specifying limits for plots - useful for `include_outlier` examination
+* Specifying limits for plots — useful for `include_outlier` examination
 
 * Using text files named after questionnaires containing variable lists for selection
 
