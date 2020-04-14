@@ -31,7 +31,7 @@ check_levels <- function(levels, labels, x, var) {
     message(paste(var, "has NA labels"))
     return(FALSE)
   }
-  # We already add -99 to levels so there are at least one level
+  # We already add -77 to levels so there are at least one level
   if (length(levels) < 2) {
     message(paste(var, "has only one level."))
     return(FALSE)

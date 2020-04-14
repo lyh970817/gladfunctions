@@ -162,9 +162,6 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
     setNames(questionnaires)
 
   select_list <- map2(questionnaires, sheets, function(q, s) {
-    # if (q == "ED") {
-    #   browser()
-    # }
     vars <- vars_eachq[[q]]
     if (format == "rds") dat <- readRDS(paste0(clean_path, "rds_renamed/", paste0(q, "_Renamed.rds")))
     if (format == "feather") dat <- feather(paste0(clean_path, "feather_renamed/", paste0(q, "_Renamed.feather")))
