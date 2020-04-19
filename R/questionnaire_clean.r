@@ -144,7 +144,7 @@ GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TR
     # If the questionnaire is in sign-up hence in "DEM",
     # we already have "Sex", "Age" and "Birthyear" in the same file.
     try(questionnaire_clean(questionnaire, dem, path, limits, rename, format))
-  } else if (questionnaire %in% c("NES", "MDDI")) {
+  } else if (questionnaire %in% c("NES", "MDDI") & "ED" %in% sign_up) {
     try(dat_list[["ED"]] %>%
       left_join(dem[
         c(
@@ -174,13 +174,9 @@ GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TR
       ) %>%
       questionnaire_clean(questionnaire, ., path, limits, rename, format))
   }
-  # else if (questionnaire == "All") {
-  #   all_names <- c("DEM", setdiff(questionnaires, sign_up))
-  #   if (!identical(sort(all_names), sort(names(dat_list)))) {
-  #     stop("You have not read in data for all questionnaires")
-  #   }
-  #   GLAD_cleanall(dat_list, path, limits, rename, format)
-  # }
+  else if (questionnaire == "All") {
+    GLAD_cleanall(dat_list, path, limits, rename, format)
+  }
 }
 
 GLAD_cleanall <- function(dat_list, path, limits, rename, format) {
