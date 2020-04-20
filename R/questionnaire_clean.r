@@ -174,8 +174,11 @@ GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TR
       ) %>%
       questionnaire_clean(questionnaire, ., path, limits, rename, format))
   }
-  else if (questionnaire == "All") {
+  else if (questionnaire == "ALL") {
     GLAD_cleanall(dat_list, path, limits, rename, format)
+  }
+  else if (questionnaire == "All" | questionnaire == "all") {
+    stop("Do you mean 'ALL' ?")
   }
 }
 
