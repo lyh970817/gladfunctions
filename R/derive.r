@@ -8,7 +8,11 @@ get_keys <- function(items, googlesheet) {
 get_score <- function(keys, data) {
   # We can freely `as.numeric` columns here as all the factor variables are
   # of `lfactor` class, which allows `as.numeric`
-  data <- map_df(data, as.numeric)
+  data <- map_df(data, function(col) {
+    as.numeric(col) %>%
+      ifelse(col == -99 | col == -77 | col == -88, NA, .) %>%
+      return()
+  })
   scores <- scoreItems(
     keys = keys,
     items = data,
@@ -58,7 +62,7 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
         get_score(all_keys, data_items),
         error = function(cond) {
           message("An error has occurred when scoring variable ", paste0("'", total_score_name, "'"))
-          message(cond)
+          message(paste0(cond))
           return(NULL)
         }
       )
@@ -81,7 +85,7 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
         get_score(sub_keys, data_subitems),
         error = function(cond) {
           message("An error has occurred when scoring variable ", paste0("'", sub_score_name, "'"))
-          message(cond)
+          message(paste0(cond))
           return(NULL)
         }
       )

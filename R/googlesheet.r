@@ -18,8 +18,6 @@ GLAD_sheet_scal <- function(questionnaire) {
     (function(x) {
       if ("GLAD.t0" %in% colnames(x)) {
         x <- rename(x, GLAD.t0 = GLAD.t0)
-      } else {
-        message("Score.key is not in ", questionnaire)
       }
       if ("Score.key" %in% colnames(x)) {
         x <- rename(x, score_key = Score.key)
@@ -28,8 +26,6 @@ GLAD_sheet_scal <- function(questionnaire) {
       }
       if ("Subscale" %in% colnames(x)) {
         x <- rename(x, subscale = Subscale)
-      } else {
-        message("Subscale is not in ", questionnaire)
       }
       if ("Minimum" %in% colnames(x)) {
         x <- rename(x, min = Minimum)
