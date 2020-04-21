@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 library(googlesheets4)
 sheets_auth(
   email = gargle::gargle_oauth_email(),
-  path = "../../GLAD-Questionnaires/sheet_scripts/glad-dict.json",
+  path = "../../../GLAD-Questionnaires/sheet_scripts/glad-dict.json",
   scopes = "https://www.googleapis.com/auth/spreadsheets",
   cache = gargle::gargle_oauth_cache(),
   use_oob = gargle::gargle_oob_default(),
@@ -122,7 +122,7 @@ clean_path <- "~/Data/GLAD/data_clean/"
       SPSS/JASP), `sas` (for SAS) and `dta` (for Stata).
 
 ```{r clean all, eval = FALSE}
-GLAD_clean("All", dat_list, clean_path, limits = FALSE, rename = TRUE, format = "rds")
+GLAD_clean("ALL", dat_list, clean_path, limits = FALSE, rename = TRUE, format = "rds")
 ```
 
 * Clean a specified questionnaire and export to `clean_path`
