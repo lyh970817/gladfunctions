@@ -6,6 +6,7 @@ get_keys <- function(items, googlesheet) {
 }
 
 get_score <- function(keys, data) {
+  browser()
   # We can freely `as.numeric` columns here as all the factor variables are
   # of `lfactor` class, which allows `as.numeric`
   data <- map_df(data, function(col) {
@@ -49,8 +50,10 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
     return(data)
   }
 
-  items <- vars[keys_pos] %>% unique()
-  data_items <- data[items[items %in% colnames(data)]]
+  items <- vars[keys_pos] %>%
+    unique() %>%
+    .[. %in% colnames(data)]
+  data_items <- data[items]
   all_keys <- get_keys(items, googlesheet)
 
   if (length(all_keys) >= 1) {
@@ -77,9 +80,10 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
     for (subscale in subscales) {
       sub_items <-
         vars[which(googlesheet[["subscale"]] == subscale)] %>%
-        unique()
+        unique() %>%
+        .[. %in% colnames(data)]
       data_subitems <-
-        data_items[sub_items[sub_items %in% colnames(data_items)]]
+        data_items[sub_items]
       sub_keys <- get_keys(sub_items, googlesheet)
       sub_score_name <- vars[which(googlesheet[["formula"]] == subscale)]
 
