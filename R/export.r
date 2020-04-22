@@ -25,7 +25,6 @@ to_binary <- function(data_cleaned, data_raw,
   data_cleaned[numeric_names] <- data_raw[which_numeric_factor]
 
   if (format == "feather") {
-    browser()
     write_feather(data_cleaned, path = path)
   }
   if (format == "rds") {
