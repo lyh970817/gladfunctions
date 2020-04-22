@@ -70,7 +70,8 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
   }
 
   subscales <- unique(googlesheet[["subscale"]]) %>%
-    .[!is.na(.)]
+    .[!is.na(.)] %>%
+    .[. %in% googlesheet[["formula"]]]
 
   if (length(subscales > 1)) {
     for (subscale in subscales) {
