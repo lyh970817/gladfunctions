@@ -50,7 +50,7 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
   }
 
   items <- vars[keys_pos] %>% unique()
-  data_items <- data[items]
+  data_items <- data[items[items %in% colnames(data)]]
   all_keys <- get_keys(items, googlesheet)
 
   if (length(all_keys) >= 1) {
@@ -78,7 +78,8 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
       sub_items <-
         vars[which(googlesheet[["subscale"]] == subscale)] %>%
         unique()
-      data_subitems <- data_items[sub_items]
+      data_subitems <-
+        data_items[sub_items[sub_items %in% colnames(data_items)]]
       sub_keys <- get_keys(sub_items, googlesheet)
       sub_score_name <- vars[which(googlesheet[["formula"]] == subscale)]
 
