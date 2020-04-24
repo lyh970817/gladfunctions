@@ -16,7 +16,7 @@
 #' @importFrom readr write_csv read_csv
 #' @importFrom googlesheets4 read_sheet sheets_sheets
 #' @importFrom summarytools descr tb freq
-#' @importFrom feather write_feather feather
+#' @importFrom feather write_feather read_feather
 #' @import ggformula
 #' @import lfactors
 
@@ -164,7 +164,7 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
   select_list <- map2(questionnaires, sheets, function(q, s) {
     vars <- vars_eachq[[q]]
     if (format == "rds") dat <- readRDS(paste0(clean_path, "rds_renamed/", paste0(q, "_Renamed.rds")))
-    if (format == "feather") dat <- feather(paste0(clean_path, "feather_renamed/", paste0(q, "_Renamed.feather")))
+    if (format == "feather") dat <- read_feather(paste0(clean_path, "feather_renamed/", paste0(q, "_Renamed.feather")))
     if (format == "dta") dat <- read_dta(paste0(clean_path, "dta_renamed/", paste0(q, "_Renamed.dta")))
     if (format == "sav") dat <- read_sav(paste0(clean_path, "sav_renamed/", paste0(q, "_Renamed.sav")))
     if (format == "sas") dat <- read_sas(paste0(clean_path, "sas_renamed/", paste0(q, "_Renamed.sas")))
