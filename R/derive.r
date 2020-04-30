@@ -116,10 +116,10 @@ GLAD_formula <- function(data, googlesheet, questionnaire) {
   }
   vars <- googlesheet[["easyname"]]
 
-  derive_where <- grepl("Derived.variable", googlesheet[["Comments"]]) &
+  derive_where <- (grepl("Derived.variable", googlesheet[["Comments"]]) &
     googlesheet[["formula"]] != questionnaire &
-    !googlesheet[["formula"]] %in% unique(googlesheet[["subscale"]]) %>%
-      which()
+    !googlesheet[["formula"]] %in% unique(googlesheet[["subscale"]])) %>%
+    which()
 
   derive_vars <- vars[derive_where]
   for (dv in derive_vars) {
