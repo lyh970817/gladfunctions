@@ -41,7 +41,7 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
     # message(paste(questionnaire, "has no Score.key."))
     return(data)
   }
-  keys_pos <- which(!is.na(googlesheet[["score_key"]]))
+  keys_pos <- which(googlesheet[["score_key"]] %in% c(1, -1))
 
   if (length(keys_pos) == 0) {
     message(paste(questionnaire, "has no Score.key."))
@@ -52,6 +52,7 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
     unique() %>%
     .[. %in% colnames(data)]
   all_keys <- get_keys(items, googlesheet)
+  browser()
   data_items <- data[paste(items, "numeric", sep = "_")]
 
   if (length(all_keys) >= 1) {
