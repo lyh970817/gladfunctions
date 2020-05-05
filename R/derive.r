@@ -41,7 +41,6 @@ GLAD_score <- function(data, googlesheet, questionnaire) {
     # message(paste(questionnaire, "has no Score.key."))
     return(data)
   }
-  browser()
   keys_pos <- which(googlesheet[["score_key"]] %in% c(1, -1))
 
   if (length(keys_pos) == 0) {
