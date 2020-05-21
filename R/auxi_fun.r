@@ -119,7 +119,7 @@ get_selected <- function(data, which, googlesheet) {
   items_all <- c(which, items_num)
 
   return(bind_cols(
-    data[c("ID", "Sex", "Age", "Birthyear")],
+    data[c("ID", "sex", "age", "birthyear", "startdate", "enddate")],
     data[colnames(data) %in% items_all]
   ))
 }

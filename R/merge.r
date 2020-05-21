@@ -19,7 +19,7 @@ GLAD_read <- function(path) {
     dat_list[[i]] <- read_csv(raw_files[[i]],
       skip = 3, col_names = col_names, guess_max = 30000
     ) %>%
-      select(-c(seq(1, 12), seq(14, 17)))
+      select(-c(seq(3, 12), seq(14, 17)))
 
     dat_names[i] <-
       # Use the second name that mathces the pattern since the first match

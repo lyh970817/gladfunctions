@@ -81,22 +81,26 @@ questionnaire_clean <- function(questionnaire, data_raw, path, limits, rename, f
   vars <- select_vars(questionnaire, data_raw, sheet)
   data_raw <- data_raw %>%
     mutate(
-      Sex = lfactor(DEM.SEX.1.0, levels = c(0, 1), labels = c("Male", "Female")),
-      Age = DEM.AGE.1.0,
+      sex = lfactor(DEM.SEX.1.0, levels = c(0, 1), labels = c("Male", "Female")),
+      age = DEM.AGE.1.0,
       # The birthyear exported by Qualtrics has two-digit format.
-      Birthyear = DEM.DOB.3.0 + 1900
+      birthyear = DEM.DOB.3.0 + 1900,
+      startdate = StartDate,
+      enddate = EndDate
     ) %>%
     select(
       ExternalReference,
-      Sex,
-      Age,
-      Birthyear,
+      sex,
+      age,
+      birthyear,
+      startdate,
+      enddate,
       vars
     ) %>%
     filter(!is_rowna(.[5:ncol(.)])) %>%
     GLAD_removedup() %>%
     GLAD_removehead(sheet) %>%
-    .[complete.cases(.[["Sex"]]), ]
+    .[complete.cases(.[["sex"]]), ]
 
   data_cleaned <- data_raw %>%
     GLAD_recode_df(googlesheet = sheet, limits = TRUE)
@@ -137,12 +141,12 @@ GLAD_clean <- function(questionnaire, dat_list, path, limits = TRUE, rename = TR
     stop("You have not read in the data files.")
   }
 
-  # We always need "DEM" to extract "Sex", "Age" and "Birthyear"
+  # We always need "DEM" to extract "sex", "age" and "birthyear"
   dem <- dat_list[["DEM"]]
 
   if (questionnaire %in% sign_up) {
     # If the questionnaire is in sign-up hence in "DEM",
-    # we already have "Sex", "Age" and "Birthyear" in the same file.
+    # we already have "sex", "age" and "birthyear" in the same file.
     try(questionnaire_clean(questionnaire, dem, path, limits, rename, format))
   } else if (questionnaire %in% c("NES", "MDDI") & "ED" %in% sign_up) {
     try(dat_list[["ED"]] %>%

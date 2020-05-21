@@ -201,16 +201,18 @@ GLAD_recode <- function(x, var, googlesheet, limits) {
 
 GLAD_recode_df <- function(data, googlesheet, limits) {
   data_cleaned <- data %>%
-    select(-ExternalReference, -Sex, -Age, -Birthyear) %>%
+    select(-ExternalReference, -sex, -age, -birthyear, -startdate, -enddate) %>%
     GLAD_rename(googlesheet = googlesheet) %>%
     imap_dfc(GLAD_recode, googlesheet = googlesheet, limits) %>%
     bind_cols(data[c(
       "ExternalReference",
-      "Sex",
-      "Age",
-      "Birthyear"
+      "sex",
+      "age",
+      "birthyear",
+      "startdate",
+      "enddate"
     )]) %>%
     # Reorder the column names.
-    select(ID = ExternalReference, Sex, Age, Birthyear, everything())
+    select(ID = ExternalReference, sex, age, birthyear, startdate, enddate, everything())
   return(data_cleaned)
 }
