@@ -56,3 +56,4 @@ Please open an issue on this GitHub page to report bugs and suggest changes.
 
 * Gender difference plots for all the continuous variables
 
+* Swap GLAD gender colours

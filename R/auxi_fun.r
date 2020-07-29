@@ -110,7 +110,7 @@ GLAD_getdescr_scal <- function(which, googlesheet) {
 #' @export
 GLAD_getdescr <- Vectorize(GLAD_getdescr_scal, vectorize.args = "which")
 
-get_selected <- function(data, which, googlesheet) {
+get_selected <- function(data, which) {
   if (length(which) == 0) {
     return(data)
   }
@@ -163,13 +163,18 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
 
   select_list <- map2(questionnaires, sheets, function(q, s) {
     vars <- vars_eachq[[q]]
-    if (format == "rds") dat <- readRDS(paste0(clean_path, "rds_renamed/", paste0(q, "_Renamed.rds")))
+    dat <- readRDS(paste0(clean_path, "rds_renamed/", paste0(q, "_Renamed.rds")))
+    dat_derived <- GLAD_derive(dat, s)
+    derived_vars <- setdiff(names(dat_derived), names(dat))
+
     if (format == "feather") dat <- read_feather(paste0(clean_path, "feather_renamed/", paste0(q, "_Renamed.feather")))
     if (format == "dta") dat <- read_dta(paste0(clean_path, "dta_renamed/", paste0(q, "_Renamed.dta")))
     if (format == "sav") dat <- read_sav(paste0(clean_path, "sav_renamed/", paste0(q, "_Renamed.sav")))
     if (format == "sas") dat <- read_sas(paste0(clean_path, "sas_renamed/", paste0(q, "_Renamed.sas")))
-    GLAD_derive(dat, s) %>%
-      get_selected(vars, s)
+
+    dat <- bind_cols(dat, dat_derived[derived_vars])
+
+    return(get_selected(dat, vars))
   }) %>% setNames(questionnaires)
 
   time <- format(Sys.time(), "%m-%d-%Y")
