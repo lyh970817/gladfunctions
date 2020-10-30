@@ -148,7 +148,7 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
     "UXP", "CAM", "NHS", "SPOVI", "EPDS", "GAM",
     "LIFE",
     "FAM", "ED", "NES", "MDDI", "OCIR", "DCQ", "DRUG", "MIG",
-    "PTSD", "FEAR", "CARE", "SLEEP"
+    "PTSD", "FEAR", "CARE", "SLEEP", "THRO"
   )
 
   sign_up <- c(
@@ -169,7 +169,7 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
     map_chr(nth, 1) %>%
     unique() %>%
     toupper() %>%
-    .%in%[c(all_questionnaires, sign_up)]
+    .%in%.[c(all_questionnaires, sign_up)]
 
   full_questionnaires <- as.list(var_list[var_list %in% c(all_questionnaires, sign_up)])
 
