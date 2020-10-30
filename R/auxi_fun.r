@@ -141,6 +141,22 @@ get_selected <- function(data, which) {
 #' 'sav', 'sas', 'feather', 'csv')
 #' @export
 GLAD_select <- function(clean_path, export_path, person, which, format) {
+  all_questionnaires <- c(
+    "PHY", "CIDID", "DEM", "MHD", "PHQ", "MSM", "MDQ",
+    "GAD", "CIDIA", "AUDIT", "SUB", "CIDIP", "CTS", "ATS",
+    "PCL", "SWB", "SPEC", "SOCP", "PAD", "AGP", "SASPD", "WSAS",
+    "UXP", "CAM", "NHS", "SPOVI", "EPDS", "GAM",
+    "LIFE",
+    "FAM", "ED", "NES", "MDDI", "OCIR", "DCQ", "DRUG", "MIG",
+    "PTSD", "FEAR", "CARE", "SLEEP"
+  )
+
+  sign_up <- c(
+    "DEM", "PHY", "MHD", "PHQ", "CIDID", "MSM", "MDQ", "GAD", "CIDIA", "AUDIT", "SUB", "CIDIP", "CTS",
+    "ATS", "PCL", "SWB", "SPEC", "SOCP", "PAD", "SASPD", "AGP", "WSAS", "UXP",
+    "CAM", "NHS"
+  )
+
   if (length(format) > 1) {
     stop("Only one format allowed.")
   }
@@ -148,10 +164,16 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
     stop("format must be one of c('rds', 'sav', 'sas', 'feather', 'csv')")
   }
   var_list <- readLines(which)
+
   questionnaires <- str_split(var_list, "\\.|_") %>%
     map_chr(nth, 1) %>%
     unique() %>%
-    toupper()
+    toupper() %>%
+    .%in%[c(all_questionnaires, sign_up)]
+
+  full_questionnaires <- as.list(var_list[var_list %in% c(all_questionnaires, sign_up)])
+
+  questionnaires <- c(questionnaires, full_questionnaires)
 
   sheets <- GLAD_sheet(questionnaires)
 
@@ -163,6 +185,7 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
 
   select_list <- map2(questionnaires, sheets, function(q, s) {
     vars <- vars_eachq[[q]]
+
     dat <- readRDS(paste0(clean_path, "rds_renamed/", paste0(q, "_Renamed.rds")))
     dat_derived <- GLAD_derive(dat, s)
     derived_vars <- setdiff(names(dat_derived), names(dat))
@@ -174,6 +197,7 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
 
     dat <- bind_cols(dat, dat_derived[derived_vars])
 
+    browser()
     return(get_selected(dat, vars))
   }) %>% setNames(questionnaires)
 
