@@ -169,7 +169,7 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
     map_chr(nth, 1) %>%
     unique() %>%
     toupper() %>%
-    .%in%[c(all_questionnaires, sign_up)]
+    .[. %in% c(all_questionnaires, sign_up)]
 
   full_questionnaires <- as.list(var_list[var_list %in% c(all_questionnaires, sign_up)])
 
@@ -197,7 +197,6 @@ GLAD_select <- function(clean_path, export_path, person, which, format) {
 
     dat <- bind_cols(dat, dat_derived[derived_vars])
 
-    browser()
     return(get_selected(dat, vars))
   }) %>% setNames(questionnaires)
 
